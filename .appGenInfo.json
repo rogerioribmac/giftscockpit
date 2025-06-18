@@ -1,0 +1,24 @@
+{
+  "generationParameters": {
+    "generationDate": "Thu Jun 12 2025 17:10:44 GMT+0000 (Coordinated Universal Time)",
+    "generatorPlatform": "SAP Business Application Studio",
+    "serviceType": "SAP System (ABAP On Premise)",
+    "metadataFilename": "",
+    "serviceUrl": "https://df1.dest/sap/opu/odata/sap/ZZ_SB_GIFTS_COCKPIT_V2",
+    "appName": "zgiftscockpit",
+    "appTitle": "Gifts cockpit",
+    "appDescription": "Gifts cockpit",
+    "appNamespace": "com.ep",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.108.26",
+    "enableCodeAssist": false,
+    "enableEslint": false,
+    "enableTypeScript": false,
+    "showMockDataInfo": true,
+    "generatorVersion": "1.18.0",
+    "template": "Basic V2",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [],
+    "launchText": "In order to launch the generated app, simply run the following from the generated app root folder:\n\n```\n    npm start\n```"
+  }
+}

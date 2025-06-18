@@ -1,0 +1,14 @@
+<mvc:View 
+        controllerName="com.ep.zgiftscockpit.controller.Item"
+        xmlns:mvc="sap.ui.core.mvc" 
+        xmlns:smartTable="sap.ui.comp.smarttable"
+        xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+        xmlns="sap.m"
+        displayBlock="true">
+
+    <Page id="idPageItem">
+
+
+    </Page>
+
+</mvc:View>
