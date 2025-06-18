@@ -47,7 +47,13 @@
             enableAutoBinding="true"
             demandPopin="true"
             enableAutoColumnWidth="true"
-            app:useSmartToggle="true" />
+            app:useSmartToggle="true" >
+            <Table >
+                <items>
+                    <ColumnListItem type="Navigation" press="onItemPress" />
+                </items>
+            </Table>
+        </smartTable:SmartTable>
 
         <footer>
             <Toolbar>

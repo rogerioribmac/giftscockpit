@@ -99,16 +99,17 @@
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": [
-            "TargetMain"
-          ]
+          "target": [ "TargetMain" ]
         },
         {
           "name": "RouteItem",
-          "pattern": "item/{reservationNo}",
-          "target": [
-            "TargetItem"
-          ]
+          "pattern": "reservation/{reservationNo}",
+          "target": [ "TargetItem" ]
+        },
+        {
+          "name": "RouteNotFound",
+          "pattern": "*",
+          "target": [ "TargetNotFound" ]
         }
       ],
       "targets": {
@@ -127,6 +128,14 @@
           "viewId": "Item",
           "viewName": "Item",
           "viewLevel": 2
+        },
+        "TargetNotFound": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "NotFound",
+          "viewName": "NotFound",
+          "viewLevel": 3
         }
       }
     },

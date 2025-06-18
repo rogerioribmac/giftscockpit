@@ -18,16 +18,15 @@ function (Controller) {
                 }
             });
 
-            oSmartTable.attachEventOnce("initialise", function () {
-                var oInnerTable = oSmartTable.getTable();
-                if (oInnerTable.attachItemPress) {
-                  oInnerTable.attachItemPress(this.onItemPress, this);
-                }
-            });
         },
 
         onItemPress: function(oEvent){
+            var sReservationNo = oEvent?.getSource()?.getBindingContext()?.getProperty("reservationNo");
 
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("RouteItem", {
+                reservationNo: sReservationNo
+            });
         },
 
         onAfterRendering: function(oEvent){
