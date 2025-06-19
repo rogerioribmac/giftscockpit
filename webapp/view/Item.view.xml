@@ -1,14 +1,13 @@
 <mvc:View 
         controllerName="com.ep.zgiftscockpit.controller.Item"
         xmlns:mvc="sap.ui.core.mvc" 
-        xmlns:smartTable="sap.ui.comp.smarttable"
         xmlns:layout="sap.ui.layout"
-        xmlns:goals="sap.uxap.sample.SharedBlocks.goals"
         xmlns:uxap="sap.uxap"
-        xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+        xmlns:core="sap.ui.core"
         xmlns="sap.m"
         displayBlock="true">
 
+    <Page id="idPageItem">
         <uxap:ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" upperCaseAnchorBar="false">
 
             <uxap:headerTitle>
@@ -21,6 +20,7 @@
                     <uxap:expandedContent>
 						<Text text="{reservationStatusTxt}"/>
 					</uxap:expandedContent>
+
                     <uxap:snappedContent>
 						<Text text="{reservationStatusTxt}"/>
 					</uxap:snappedContent>
@@ -29,7 +29,6 @@
 						<FlexBox fitContainer="true" alignItems="Center">
 							<Avatar src="sap-icon://customer-order-entry" backgroundColor="Random" class="sapUiTinyMarginEnd"/>
                             <Title text="{= 'Reservation ' + ${reservationNo} }" wrapping="true"/>
-                            <Text text="{reservationStatusTxt}"/>
 						</FlexBox>
 					</uxap:snappedHeading>
 
@@ -41,51 +40,34 @@
                     <Avatar src="sap-icon://customer-order-entry" backgroundColor="Random" displaySize="L" class="sapUiTinyMarginEnd"/>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus title="{i18n>ItemDG}" text="{dg}"/>
-                        <ObjectStatus title="{i18n>ItemEventOrganizer}" text="{eventOrganizer}"/>
-                        <ObjectStatus title="{i18n>ItemContactPerson}" text="{contactPerson}"/>
-                        <ObjectStatus title="{i18n>ItemService}" text="{service}"/>
-                        <ObjectStatus title="{i18n>ItemEventName}" text="{eventName}"/>
+                        <ObjectStatus title="{i18n>Item.DG}" text="{dg}"/>
+                        <ObjectStatus title="{i18n>Item.EventOrganizer}" text="{eventOrganizer}"/>
+                        <ObjectStatus title="{i18n>Item.ContactPerson}" text="{contactPerson}"/>
+                        <ObjectStatus title="{i18n>Item.Service}" text="{service}"/>
+                        <ObjectStatus title="{i18n>Item.EventName}" text="{eventName}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus title="{i18n>ItemEventCountry}" text="{eventCountryTxt}"/>
-                        <ObjectStatus title="{i18n>ItemEventDate}" text="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }"/>
-                        <ObjectStatus title="{i18n>ItemNeedByDate}" text="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }"/>
-                        <ObjectStatus title="{i18n>ItemRequestor}" text="{requestor}"/>
-                        <ObjectStatus title="{i18n>ItemComment}" text="{pickupComment}"/>
+                        <ObjectStatus title="{i18n>Item.EventCountry}" text="{eventCountryTxt}"/>
+                        <ObjectStatus title="{i18n>Item.EventDate}" text="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }"/>
+                        <ObjectStatus title="{i18n>Item.NeedByDate}" text="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }"/>
+                        <ObjectStatus title="{i18n>Item.Requestor}" text="{requestor}"/>
+                        <ObjectStatus title="{i18n>Item.Comment}" text="{pickupComment}"/>
                     </layout:VerticalLayout>
 
                 </FlexBox>
             </uxap:headerContent>
 
             <uxap:sections>
-                    <uxap:ObjectPageSection titleUppercase="false" title="{ i18n>ItemItems}">
+
+
+
+                    <uxap:ObjectPageSection titleUppercase="false" title="{i18n>Item.Items}">
                         <uxap:subSections>
                             <uxap:ObjectPageSubSection titleUppercase="false">
                                 <uxap:blocks>
                                     
-                                    <smartTable:SmartTable
-                                        id="idSmartTable2"
-                                        entitySet="zz_dd_gifts_ckpt_reservations"
-                                        smartFilterId="smartFilterBar"
-                                        tableType="ResponsiveTable"
-                                        showDetailsButton="true"
-                                        enableExport="true"
-                                        useVariantManagement="true"
-                                        useTablePersonalisation="true"
-                                        header="Reservations List"
-                                        showRowCount="true"
-                                        enableAutoBinding="true"
-                                        demandPopin="true"
-                                        enableAutoColumnWidth="true"
-                                        app:useSmartToggle="true" >
-                                        <Table >
-                                            <items>
-                                                <ColumnListItem type="Navigation" press="onItemPress" />
-                                            </items>
-                                        </Table>
-                                    </smartTable:SmartTable>                                
+                                    <core:Fragment fragmentName="com.ep.zgiftscockpit.view.fragments.ItemSmartTable" type="XML"/>                   
 
                                 </uxap:blocks>
                             </uxap:ObjectPageSubSection>
@@ -95,4 +77,9 @@
 
         </uxap:ObjectPageLayout>
 
+        <footer>
+            <core:Fragment fragmentName="com.ep.zgiftscockpit.view.fragments.ItemFooter" type="XML"/> 
+        </footer>        
+    </Page>
+    
 </mvc:View>

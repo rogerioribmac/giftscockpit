@@ -42,19 +42,28 @@
     </edmx:Reference>
     <edmx:DataServices m:DataServiceVersion="2.0">
         <Schema Namespace="cds_zz_sd_gifts_cockpit" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="zz_dd_gifts_ckpt_itemsType" sap:label="Gifts Cockpit - Reservations" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="reservationNo"/>
+                </Key>
+                <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Reservation" sap:quickinfo="Number of reservation/dependent requirements"/>
+                <Property Name="reservationItem" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Item no." sap:quickinfo="Item Number of Reservation / Dependent Requirements"/>
+                <NavigationProperty Name="to_reservation" Relationship="cds_zz_sd_gifts_cockpit.assoc_264A670A1A53B0EDEBBF07CC540F8871" FromRole="FromRole_assoc_264A670A1A53B0EDEBBF07CC540F8871" ToRole="ToRole_assoc_264A670A1A53B0EDEBBF07CC540F8871"/>
+            </EntityType>
             <EntityType Name="zz_dd_gifts_ckpt_reservationsType" sap:label="Gifts Cockpit - Reservations" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="reservationNo"/>
                 </Key>
                 <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Reservation" sap:quickinfo="Number of reservation/dependent requirements"/>
-                <Property Name="dg" Type="Edm.String" MaxLength="60" sap:label="DG"/>
+                <Property Name="dg" Type="Edm.String" MaxLength="60" sap:label="DG" sap:value-list="fixed-values"/>
                 <Property Name="service" Type="Edm.String" MaxLength="60" sap:label="Service of ct.pers" sap:quickinfo="Service of Contact Person"/>
                 <Property Name="contactPerson" Type="Edm.String" MaxLength="80" sap:label="Contact Person"/>
-                <Property Name="eventOrganizer" Type="Edm.String" MaxLength="80" sap:label="Event organiser" sap:quickinfo="Event organizer"/>
+                <Property Name="eventOrganizer" Type="Edm.String" MaxLength="80" sap:label="Event organiser" sap:quickinfo="Event organizer" sap:value-list="fixed-values"/>
                 <Property Name="eventName" Type="Edm.String" MaxLength="50" sap:label="Event name"/>
                 <Property Name="eventDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Event Date"/>
                 <Property Name="needByDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Need-by Date"/>
-                <Property Name="eventCountry" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Event Country"/>
+                <Property Name="eventCountry" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:text="eventCountryTxt" sap:label="Event Country"/>
+                <Property Name="eventCountryTxt" Type="Edm.String" MaxLength="15" sap:label="Country/Region Name" sap:quickinfo="Name of Country/Region (Short)"/>
                 <Property Name="reservationStatus" Type="Edm.String" MaxLength="1" sap:label="Reservation status"/>
                 <Property Name="reservationStatusTxt" Type="Edm.String" MaxLength="60" sap:label="Short Description" sap:quickinfo="Short Text for Fixed Values"/>
                 <Property Name="pickupDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Pickup date"/>
@@ -64,6 +73,19 @@
                 <Property Name="protocolResponsible" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Protocol responsible"/>
                 <Property Name="missionCancDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Mission cancelled" sap:quickinfo="Mission cancelled date"/>
                 <Property Name="requestor" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <NavigationProperty Name="to_items" Relationship="cds_zz_sd_gifts_cockpit.assoc_CB4AA2D33047707AF3D70EC5A72D3772" FromRole="FromRole_assoc_CB4AA2D33047707AF3D70EC5A72D3772" ToRole="ToRole_assoc_CB4AA2D33047707AF3D70EC5A72D3772"/>
+            </EntityType>
+            <EntityType Name="zz_dd_gifts_ckpt_sh_dgType" sap:label="Gifts Cockpit - SH for DG" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="dg"/>
+                </Key>
+                <Property Name="dg" Type="Edm.String" Nullable="false" MaxLength="60" sap:label="DG" sap:value-list="fixed-values"/>
+            </EntityType>
+            <EntityType Name="zz_dd_gifts_ckpt_sh_organizerType" sap:label="Gifts Cockpit - SH for DG" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="eventOrganizer"/>
+                </Key>
+                <Property Name="eventOrganizer" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Event organiser" sap:quickinfo="Event organizer" sap:value-list="fixed-values"/>
             </EntityType>
             <EntityType Name="zz_dd_gifts_ckpt_status_countType" sap:label="Gifts Cockpit - Status Counter last year" sap:content-version="1">
                 <Key>
@@ -233,18 +255,29 @@
                     </Dependent>
                 </ReferentialConstraint>
             </Association>
+            <Association Name="assoc_CB4AA2D33047707AF3D70EC5A72D3772" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType" Multiplicity="1" Role="FromRole_assoc_CB4AA2D33047707AF3D70EC5A72D3772"/>
+                <End Type="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType" Multiplicity="*" Role="ToRole_assoc_CB4AA2D33047707AF3D70EC5A72D3772"/>
+            </Association>
+            <Association Name="assoc_264A670A1A53B0EDEBBF07CC540F8871" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType" Multiplicity="1" Role="FromRole_assoc_264A670A1A53B0EDEBBF07CC540F8871"/>
+                <End Type="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType" Multiplicity="1" Role="ToRole_assoc_264A670A1A53B0EDEBBF07CC540F8871"/>
+            </Association>
             <EntityContainer Name="cds_zz_sd_gifts_cockpit_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="SAP__Currencies" EntityType="cds_zz_sd_gifts_cockpit.SAP__Currency" sap:content-version="1"/>
+                <EntitySet Name="SAP__UnitsOfMeasure" EntityType="cds_zz_sd_gifts_cockpit.SAP__UnitOfMeasure" sap:content-version="1"/>
+                <EntitySet Name="SAP__MyDocumentDescriptions" EntityType="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" sap:content-version="1"/>
                 <EntitySet Name="SAP__FormatSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__Format" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="SAP__PDFStandardSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__PDFStandard" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="SAP__TableColumnsSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__TableColumns" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="SAP__CoverPageSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__CoverPage" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="SAP__SignatureSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__Signature" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="SAP__ValueHelpSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__ValueHelp" sap:content-version="1"/>
+                <EntitySet Name="zz_dd_gifts_ckpt_items" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_dd_gifts_ckpt_reservations" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="zz_dd_gifts_ckpt_sh_dg" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_dgType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="zz_dd_gifts_ckpt_sh_organizer" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_dd_gifts_ckpt_status_count" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_status_countType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="SAP__Currencies" EntityType="cds_zz_sd_gifts_cockpit.SAP__Currency" sap:content-version="1"/>
-                <EntitySet Name="SAP__UnitsOfMeasure" EntityType="cds_zz_sd_gifts_cockpit.SAP__UnitOfMeasure" sap:content-version="1"/>
-                <EntitySet Name="SAP__MyDocumentDescriptions" EntityType="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" sap:content-version="1"/>
                 <AssociationSet Name="to_formatSet" Association="cds_zz_sd_gifts_cockpit.to_format" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_format"/>
                     <End EntitySet="SAP__FormatSet" Role="ToRole_to_format"/>
@@ -252,6 +285,10 @@
                 <AssociationSet Name="to_pdfstandardSet" Association="cds_zz_sd_gifts_cockpit.to_pdfstandard" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_pdfstandard"/>
                     <End EntitySet="SAP__PDFStandardSet" Role="ToRole_to_pdfstandard"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_CB4AA2D33047707AF3D70EC5A72D3772" Association="cds_zz_sd_gifts_cockpit.assoc_CB4AA2D33047707AF3D70EC5A72D3772" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="zz_dd_gifts_ckpt_reservations" Role="FromRole_assoc_CB4AA2D33047707AF3D70EC5A72D3772"/>
+                    <End EntitySet="zz_dd_gifts_ckpt_items" Role="ToRole_assoc_CB4AA2D33047707AF3D70EC5A72D3772"/>
                 </AssociationSet>
                 <AssociationSet Name="to_tablecolumnsSet" Association="cds_zz_sd_gifts_cockpit.to_tablecolumns" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_tablecolumns"/>
@@ -261,14 +298,129 @@
                     <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_signature"/>
                     <End EntitySet="SAP__SignatureSet" Role="ToRole_to_signature"/>
                 </AssociationSet>
+                <AssociationSet Name="assoc_264A670A1A53B0EDEBBF07CC540F8871" Association="cds_zz_sd_gifts_cockpit.assoc_264A670A1A53B0EDEBBF07CC540F8871" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="zz_dd_gifts_ckpt_items" Role="FromRole_assoc_264A670A1A53B0EDEBBF07CC540F8871"/>
+                    <End EntitySet="zz_dd_gifts_ckpt_reservations" Role="ToRole_assoc_264A670A1A53B0EDEBBF07CC540F8871"/>
+                </AssociationSet>
                 <AssociationSet Name="to_coverpageSet" Association="cds_zz_sd_gifts_cockpit.to_coverpage" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_coverpage"/>
                     <End EntitySet="SAP__CoverPageSet" Role="ToRole_to_coverpage"/>
                 </AssociationSet>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType/dg" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="DG"/>
+                        <PropertyValue Property="CollectionPath" String="zz_dd_gifts_ckpt_sh_dg"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="dg"/>
+                                    <PropertyValue Property="ValueListProperty" String="dg"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType/eventOrganizer" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Event organiser"/>
+                        <PropertyValue Property="CollectionPath" String="zz_dd_gifts_ckpt_sh_organizer"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="eventOrganizer"/>
+                                    <PropertyValue Property="ValueListProperty" String="eventOrganizer"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_dgType/dg" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="DG"/>
+                        <PropertyValue Property="CollectionPath" String="zz_dd_gifts_ckpt_sh_dg"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="dg"/>
+                                    <PropertyValue Property="ValueListProperty" String="dg"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType/eventOrganizer" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Event organiser"/>
+                        <PropertyValue Property="CollectionPath" String="zz_dd_gifts_ckpt_sh_organizer"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="eventOrganizer"/>
+                                    <PropertyValue Property="ValueListProperty" String="eventOrganizer"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues"/>
+            </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType/to_items" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Composition"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities/zz_dd_gifts_ckpt_items" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_reservation"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities/zz_dd_gifts_ckpt_reservations" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_items"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Org.OData.Capabilities.V1.BatchSupport">

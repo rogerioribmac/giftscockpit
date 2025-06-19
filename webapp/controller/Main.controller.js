@@ -1,7 +1,8 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller"
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/core/Fragment"
 ],
-function (Controller) {
+function (Controller, Fragment) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Main", {
@@ -55,6 +56,108 @@ function (Controller) {
 
             var sSelectedKey = oEvent.getParameter("selectedKey");
             this._filterSmartTable(sSelectedKey);
+
+        },
+
+        onModifyHeader: function(oEvent){
+
+            var oSmartTable = this.getView()?.byId("idSmartTable");
+            var oSelected = oSmartTable?.getTable()?.getSelectedItems();
+
+            if (oSelected.length) {
+
+                this._openDialogModifyHeader(oSelected);
+
+            } else {
+                const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLine");
+                sap.m.MessageToast.show(sMessage);
+            }
+
+        },
+
+        formatDialogModifyHeaderTitle: function(sText, sReservationNo){
+            return sText + " " + sReservationNo;
+        },
+
+        OnDialogModHeaderMoveRight: function(oEvent){
+
+            if (this._iCurrentIndex < this._aSelectedItems.length - 1) {
+
+                this._iCurrentIndex++;
+                const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                this._pHeaderDialog.then(oDialog => {
+                    oDialog.setBindingContext(oContext);
+                });
+
+                this.getView()?.byId("idDialogModHeadLeft")?.setEnabled(true);
+            } 
+            
+            this.OnDialogModHeaderArrowsVisibility();
+
+        },
+
+        OnDialogModHeaderMoveLeft: function(oEvent) {
+            if (this._iCurrentIndex > 0) {
+
+                this._iCurrentIndex--;
+                const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                this._pHeaderDialog.then(oDialog => {
+                    oDialog.setBindingContext(oContext);
+                });
+        
+                this.getView()?.byId("idDialogModHeadRight")?.setEnabled(true);
+
+            }
+        
+            this.OnDialogModHeaderArrowsVisibility();
+
+        },
+
+        OnDialogModHeaderArrowsVisibility: function(){
+
+            if (this._iCurrentIndex == 0) {
+                this.getView()?.byId("idDialogModHeadLeft")?.setEnabled(false);
+            } else {
+                this.getView()?.byId("idDialogModHeadLeft")?.setEnabled(true);
+            }
+
+            if (this._iCurrentIndex == this._aSelectedItems.length - 1) {
+                this.getView()?.byId("idDialogModHeadRight")?.setEnabled(false);
+            } else {
+                this.getView()?.byId("idDialogModHeadRight")?.setEnabled(true);
+            }
+
+        },
+
+        _openDialogModifyHeader: function(oSelected){
+
+            this._aSelectedItems = oSelected; 
+            this._iCurrentIndex = 0;
+            const oView = this.getView();
+            const oContext = oSelected[this._iCurrentIndex].getBindingContext(); 
+debugger;
+            if (!this._pHeaderDialog) {
+
+                this._pHeaderDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "com.ep.zgiftscockpit.view.fragments.MainModifyHeader",
+                    controller: this
+                }).then((oDialog) => {
+                    oView.addDependent(oDialog);
+                    oDialog.setBindingContext(oContext);
+                    oDialog.open();
+                    this.OnDialogModHeaderArrowsVisibility();
+                    return oDialog;
+                });
+
+            } else {
+                this._pHeaderDialog.then((oDialog) => {
+                    oDialog.setBindingContext(oContext);
+                    this.OnDialogModHeaderArrowsVisibility();
+                    oDialog.open();
+                });
+            }
 
         },
 

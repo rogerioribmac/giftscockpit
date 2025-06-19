@@ -1,0 +1,14 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" >
+    
+    <Toolbar>
+        <ToolbarSpacer/>
+        <Button text="{i18n>Main.Approve}" press="onApprove" type="Accept" icon="sap-icon://accept"/>
+        <Button text="{i18n>Main.Reject}" press="onReject" type="Reject" icon="sap-icon://decline"/>
+        <Button text="{i18n>Main.ModifyHeader}" press="onModifyHeader" icon="sap-icon://edit"/>
+        <Button text="{i18n>Main.Pickup}" press="onPickup" icon="sap-icon://enter-more"/>
+        <Button text="{i18n>Main.SeePDF}" press="onSeePDF" icon="sap-icon://pdf-reader"/>
+    </Toolbar>
+
+</core:FragmentDefinition>

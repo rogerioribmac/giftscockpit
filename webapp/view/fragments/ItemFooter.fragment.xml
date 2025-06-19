@@ -1,0 +1,14 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" >
+    
+    <Toolbar>
+        <ToolbarSpacer/>
+        <Button text="{i18n>Item.ModItem}" press="onApprove" icon="sap-icon://edit"/>
+        <Button text="{i18n>Item.StockOverview}" press="onReject" icon="sap-icon://product"/>
+        <Button text="{i18n>Item.Delete}" press="onModifyHeader" icon="sap-icon://delete"/>
+        <Button text="{i18n>Item.Add}" press="onPickup" icon="sap-icon://add"/>
+        <Button text="{i18n>Item.SwapMaterial}" press="onSeePDF" icon="sap-icon://journey-change"/>
+    </Toolbar>
+
+</core:FragmentDefinition>

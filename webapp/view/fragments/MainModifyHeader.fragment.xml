@@ -1,0 +1,110 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:smartForm="sap.ui.comp.smartform"
+    xmlns:smartField="sap.ui.comp.smartfield"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:layout="sap.ui.layout">
+    
+    <Dialog
+        id="itemDetailsDialog"
+        title="{parts: [
+                {path: 'i18n>Main.ModifyHeaderReserv'},
+                {path: 'reservationNo'}
+            ],
+            formatter: '.formatDialogModifyHeaderTitle'}"
+        contentWidth="60%"
+        draggable="true"
+        resizable="true"
+        class="sapUiContentPadding" >
+
+        <!-- <f:SimpleForm
+            id="idModifyHeaderForm"
+            layout="ResponsiveGridLayout"
+            editable="true"
+            class="sapUiSmallMarginBeginEnd">
+
+            <Label text="{i18n>Item.DG}" />
+            <Input value="{dg}" />
+
+            <Label text="{i18n>Item.EventOrganizer}" />
+            <Input value="{eventOrganizer}" />
+
+            <Label text="{i18n>Item.ContactPerson}" />
+            <Input value="{contactPerson}" />
+
+            <Label text="{i18n>Item.Service}" />
+            <Input value="{service}" />
+
+            <Label text="{i18n>Item.EventName}" />
+            <Input value="{eventName}" />
+
+            <Label text="{i18n>Item.EventCountry}" />
+            <Input value="{eventCountryTxt}" />
+
+            <Label text="{i18n>Item.EventDate}" />
+            <DatePicker value="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }" />
+
+            <Label text="{i18n>Item.NeedByDate}" />
+            <DatePicker value="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }" />
+
+            <Label text="{i18n>Item.Requestor}" />
+            <Input value="{requestor}" />
+
+            <Label text="{i18n>Item.Comment}" />
+            <TextArea value="{pickupComment}" rows="4" />
+
+        </f:SimpleForm> -->
+           
+        <smartForm:SmartForm 
+            id="idSmartFormModHeader"
+            editTogglable="true" 
+            title="{reservationNo}"
+            editable="true"
+            flexEnabled="false">
+            <smartForm:Group>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{dg}" editable="true" />
+                </smartForm:GroupElement>
+                <!-- <smartForm:GroupElement>
+                    <smartField:SmartField value="{eventOrganizer}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{contactPerson}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{service}" />
+                </smartForm:GroupElement>
+
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{eventName}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{eventCountryTxt}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{eventDate}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{needByDate}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{requestor}" />
+                </smartForm:GroupElement>
+                <smartForm:GroupElement>
+                    <smartField:SmartField value="{pickupComment}" />
+                </smartForm:GroupElement> -->
+            </smartForm:Group>
+        </smartForm:SmartForm>
+
+        <buttons>
+            <Button icon="sap-icon://navigation-left-arrow" press="OnDialogModHeaderMoveLeft" id="idDialogModHeadLeft"/>
+            <Button icon="sap-icon://navigation-right-arrow" press="OnDialogModHeaderMoveRight" id="idDialogModHeadRight"/>
+            <Button text="Save" type="Emphasized" press="onSaveDialogPress"/>
+            <Button text="Cancel" press="onCancelDialogPress"/>
+        </buttons>
+
+    </Dialog>
+
+</core:FragmentDefinition>

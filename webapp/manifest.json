@@ -75,7 +75,9 @@
       "": {
         "dataSource": "mainService",
         "preload": true,
-        "settings": {}
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
       }
     },
     "resources": {
@@ -99,17 +101,23 @@
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": [ "TargetMain" ]
+          "target": [
+            "TargetMain"
+          ]
         },
         {
           "name": "RouteItem",
           "pattern": "reservation/{reservationNo}",
-          "target": [ "TargetItem" ]
+          "target": [
+            "TargetItem"
+          ]
         },
         {
           "name": "RouteNotFound",
           "pattern": "*",
-          "target": [ "TargetNotFound" ]
+          "target": [
+            "TargetNotFound"
+          ]
         }
       ],
       "targets": {

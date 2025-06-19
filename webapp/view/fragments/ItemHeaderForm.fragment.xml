@@ -1,0 +1,44 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+    
+    <f:SimpleForm
+        id="SimpleFormDisplay"
+        layout="ResponsiveGridLayout"
+        editable="false"
+        class="sapUiSmallMarginBeginEnd">
+
+        <Label text="{i18n>Item.DG}" />
+        <Text text="{dg}" />
+
+        <Label text="{i18n>Item.EventOrganizer}" />
+        <Text text="{eventOrganizer}" />
+
+        <Label text="{i18n>Item.ContactPerson}" />
+        <Text text="{contactPerson}" />
+
+        <Label text="{i18n>Item.Service}" />
+        <Text text="{service}" />
+
+        <Label text="{i18n>Item.EventName}" />
+        <Text text="{eventName}" />
+
+        <Label text="{i18n>Item.EventCountry}" />
+        <Text text="{eventCountryTxt}" />
+
+        <Label text="{i18n>Item.EventDate}" />
+        <Text text="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }" />
+
+        <Label text="{i18n>Item.NeedByDate}" />
+        <Text text="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }" />
+
+        <Label text="{i18n>Item.Requestor}" />
+        <Text text="{requestor}" />
+
+        <Label text="{i18n>Item.Comment}" />
+        <Text text="{pickupComment}" />
+
+    </f:SimpleForm>  
+
+</core:FragmentDefinition>
