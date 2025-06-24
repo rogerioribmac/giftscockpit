@@ -9,7 +9,7 @@
         expandable="false"
         select="onIconTabBarSelect"
         items="{
-            path: '/zz_dd_gifts_ckpt_status_count',
+            path: '/zz_pv_gifts_ckpt_status_count',
             sorter: [{ path: 'sequence', descending: false }]
         }">
         <items>

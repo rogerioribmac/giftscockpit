@@ -22,12 +22,14 @@ function (Controller, Fragment) {
         },
 
         onItemPress: function(oEvent){
+
             var sReservationNo = oEvent?.getSource()?.getBindingContext()?.getProperty("reservationNo");
 
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("RouteItem", {
                 reservationNo: sReservationNo
             });
+
         },
 
         onAfterRendering: function(oEvent){
@@ -77,7 +79,9 @@ function (Controller, Fragment) {
         },
 
         formatDialogModifyHeaderTitle: function(sText, sReservationNo){
+
             return sText + " " + sReservationNo;
+
         },
 
         OnDialogModHeaderMoveRight: function(oEvent){
@@ -98,6 +102,7 @@ function (Controller, Fragment) {
         },
 
         OnDialogModHeaderMoveLeft: function(oEvent) {
+
             if (this._iCurrentIndex > 0) {
 
                 this._iCurrentIndex--;
@@ -130,13 +135,29 @@ function (Controller, Fragment) {
 
         },
 
+        onSaveDialogPress: function(oEvent){
+
+            const oModel = this.getView().getModel();
+
+            oModel.submitChanges({
+                success: function (oSuccess) {
+                    this._pHeaderDialog.close();
+                    sap.m.MessageToast.show("Alterações salvas com sucesso!");
+                },
+                error: function (oError) {
+                    sap.m.MessageBox.error("Erro ao salvar alterações.");
+                }
+            });
+
+        },
+
         _openDialogModifyHeader: function(oSelected){
 
             this._aSelectedItems = oSelected; 
             this._iCurrentIndex = 0;
             const oView = this.getView();
             const oContext = oSelected[this._iCurrentIndex].getBindingContext(); 
-debugger;
+
             if (!this._pHeaderDialog) {
 
                 this._pHeaderDialog = Fragment.load({

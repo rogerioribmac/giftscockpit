@@ -17,7 +17,7 @@ function (Controller) {
             var oView = this.getView();
 
             oView?.bindElement({
-                path: "/zz_dd_gifts_ckpt_reservations('" + sReservationNo + "')",
+                path: "/zz_pv_gifts_ckpt_reservations('" + sReservationNo + "')",
 
                 parameters: {
                   expand: "to_items"

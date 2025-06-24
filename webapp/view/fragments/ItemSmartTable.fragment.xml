@@ -6,7 +6,7 @@
     
     <smartTable:SmartTable
         id="idSmartTableItems"
-        entitySet="zz_dd_gifts_ckpt_items"
+        entitySet="zz_pv_gifts_ckpt_items"
         tableBindingPath="to_items"
         tableType="ResponsiveTable"
         showDetailsButton="true"

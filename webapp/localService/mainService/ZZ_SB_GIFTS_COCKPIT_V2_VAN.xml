@@ -26,6 +26,30 @@
     </edmx:Reference>
     <edmx:DataServices>
         <Schema Namespace="zz_sb_gifts_cockpit_v2_van.v1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/materialTxt">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/plantTxt">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/recipientCountryTxt">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/materialNo">
+                <Annotation Term="Common.Text" Path="materialTxt">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/plant">
+                <Annotation Term="Common.Text" Path="plantTxt">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/recipientCountry">
+                <Annotation Term="Common.Text" Path="recipientCountryTxt">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+            </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType">
                 <Annotation Term="UI.LineItem">
                     <Collection>
@@ -33,7 +57,50 @@
                             <PropertyValue Property="Value" Path="reservationItem"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reservationNo"/>
+                            <PropertyValue Property="Value" Path="plant"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="materialNo"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="function"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="firstName"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="lastName"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="recipientCountry"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reservedQuantity"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="confirmedDeliveredQuantity"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="deliveredQuantity"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="preparedQuantity"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="DeliveredDate"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="commentTxt"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -50,6 +117,16 @@
                 </Annotation>
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType">
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="dg"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="eventOrganizer"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
@@ -104,21 +181,14 @@
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_dgType">
-                <Annotation Term="UI.LineItem">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType">
+                <Annotation Term="UI.Identification">
                     <Collection>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="dg"/>
+                            <PropertyValue Property="Value" Path="eventOrganizer"/>
                         </Record>
                     </Collection>
                 </Annotation>
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>dg</PropertyPath>
-                    </Collection>
-                </Annotation>
-            </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType">
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">

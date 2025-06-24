@@ -5,7 +5,7 @@
     
     <smartFilterBar:SmartFilterBar 
         id="smartFilterBar" 
-        entitySet="zz_dd_gifts_ckpt_reservations" 
+        entitySet="zz_pv_gifts_ckpt_reservations" 
         persistencyKey="SmartFilter_Explored" />
 
 </core:FragmentDefinition>

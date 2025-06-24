@@ -6,7 +6,7 @@
     
     <smartTable:SmartTable
         id="idSmartTable"
-        entitySet="zz_dd_gifts_ckpt_reservations"
+        entitySet="zz_pv_gifts_ckpt_reservations"
         smartFilterId="smartFilterBar"
         tableType="ResponsiveTable"
         showDetailsButton="true"
