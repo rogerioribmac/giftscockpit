@@ -1,8 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/ui/core/Fragment"
+    "sap/ui/core/Fragment",
+    "sap/m/MessageBox"
 ],
-function (Controller, Fragment) {
+function (Controller, Fragment, MessageBox) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Main", {
@@ -72,7 +73,7 @@ function (Controller, Fragment) {
 
             } else {
                 const oBundle = this.getView().getModel("i18n").getResourceBundle();
-                const sMessage = oBundle.getText("Main.ErrorMsgSelectLine");
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineModify");
                 sap.m.MessageToast.show(sMessage);
             }
 
@@ -137,18 +138,146 @@ function (Controller, Fragment) {
 
         onSaveDialogPress: function(oEvent){
 
-            const oModel = this.getView().getModel();
+            const oModel = this.getView().getModel(); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
 
             oModel.submitChanges({
                 success: function (oSuccess) {
-                    this._pHeaderDialog.close();
-                    sap.m.MessageToast.show("Alterações salvas com sucesso!");
-                },
+                    sap.m.MessageToast.show(oResourceBundle.getText("Main.ChangesSaved"));
+                    this._pHeaderDialog.then(function (oDialog) {
+                        oDialog.close();
+                    });
+                }.bind(this),
                 error: function (oError) {
-                    sap.m.MessageBox.error("Erro ao salvar alterações.");
+                    sap.m.MessageToast.show(oResourceBundle.getText("Main.SaveError"));
+                }.bind(this)
+            });
+
+        },
+
+        onCancelDialogPress: function(oEvent){
+
+            this._checkCloseDialog();
+
+        },
+
+        onAllowReservation: function(oEvent){
+            debugger;
+            var oModel = this.getView().getModel();
+            var oSmartTable = this.getView()?.byId("idSmartTable");
+            var oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oBundle = this.getView().getModel("i18n").getResourceBundle();
+            
+            if (oSelected.length == 0){
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineAccept");
+                sap.m.MessageToast.show(sMessage);
+            } else if (oSelected.length > 1){
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineAccept");
+                sap.m.MessageToast.show(sMessage);
+            } else {
+
+                this._openDialogAccept(oSelected);
+
+            }
+
+        },
+
+        onAcceptYes: function(oEvent){
+
+            debugger;
+            var oModel = this.getView().getModel();
+            var oDialog = this.byId("idAcceptDialog");
+            var oContext = oDialog.getBindingContext();
+            const sReservationNo = oContext.getProperty("reservationNo");
+            var oTextArea = this.byId("idAcceptTextArea");
+            const sReason = oTextArea.getValue();
+
+            oModel.callFunction("/allowReservation", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: sReservationNo,
+                    Reason: sReason
+                },
+                success: function(oData, oResponse) {
+                    const aMessages = oResponse && oResponse.headers && oResponse.headers["sap-message"];
+                    if (aMessages) {
+                        const oMessage = JSON.parse(aMessages);
+                        sap.m.MessageToast.show(oMessage.message);
+                    }
+                    this._pAcceptDialog.then(function (oDialog) {
+                        oDialog.close();
+                    });
+                },
+                error: function(oError) {
+                    const aMessages = oResponse && oResponse.headers && oResponse.headers["sap-message"];
+                    if (aMessages) {
+                        const oMessage = JSON.parse(aMessages);
+                        sap.m.MessageToast.show(oMessage.message);
+                    }
+                    this._pAcceptDialog.then(function (oDialog) {
+                        oDialog.close();
+                    });
                 }
             });
 
+        },
+
+        onAcceptNo: function(oEvent){
+            this._pAcceptDialog.then((oDialog) => {
+                oDialog.close();
+            });
+        },
+
+        _checkCloseDialog: function(oPromise){
+
+            const oModel = this.getView().getModel();
+            const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            const oPendingChanges = oModel.getPendingChanges();
+
+            if (Object.keys(oPendingChanges).length > 0) {
+                MessageBox.confirm(
+                    oResourceBundle.getText("Main.ExitWithoutSaving"), 
+                    {
+                        title: oResourceBundle.getText("Main.ConfirmationTitle"), 
+                        actions: [
+                            oResourceBundle.getText("Main.Yes"),
+                            oResourceBundle.getText("Main.No")                          ],
+                        emphasizedAction: oResourceBundle.getText("Main.No"),
+                        onClose: function (sAction) {
+                            if (sAction === oResourceBundle.getText("Main.Yes")) {
+                                oModel.resetChanges();
+                                if (oPromise){
+                                    oPromise.resolve();
+                                } else {
+                                    this._pHeaderDialog.then((oDialog) => {
+                                        oDialog.close();
+                                    });
+                                }
+                            }
+                        }.bind(this)
+                    }
+                );
+            } else {
+                if (oPromise){
+                    oPromise.resolve();
+                } else {
+                    this._pHeaderDialog.then((oDialog) => {
+                        oDialog.close();
+                    });
+                }
+            }
+
+        },
+
+        _setEscapeHandler: function(oDialog) {
+
+            const oView = this.getView();
+            const oModel = oView.getModel();
+            const oResourceBundle = oView.getModel("i18n").getResourceBundle();
+        
+            oDialog.setEscapeHandler((oPromise) => {
+                this._checkCloseDialog(oPromise);
+            });
         },
 
         _openDialogModifyHeader: function(oSelected){
@@ -156,7 +285,8 @@ function (Controller, Fragment) {
             this._aSelectedItems = oSelected; 
             this._iCurrentIndex = 0;
             const oView = this.getView();
-            const oContext = oSelected[this._iCurrentIndex].getBindingContext(); 
+            const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
+            const oModel = oContext.getModel();
 
             if (!this._pHeaderDialog) {
 
@@ -167,6 +297,7 @@ function (Controller, Fragment) {
                 }).then((oDialog) => {
                     oView.addDependent(oDialog);
                     oDialog.setBindingContext(oContext);
+                    this._setEscapeHandler(oDialog);
                     oDialog.open();
                     this.OnDialogModHeaderArrowsVisibility();
                     return oDialog;
@@ -176,6 +307,33 @@ function (Controller, Fragment) {
                 this._pHeaderDialog.then((oDialog) => {
                     oDialog.setBindingContext(oContext);
                     this.OnDialogModHeaderArrowsVisibility();
+                    oDialog.open();
+                });
+            }
+
+        },
+
+        _openDialogAccept: function(oSelected){
+
+            const oContext = oSelected[0].getBindingContext();
+            const oView = this.getView();  
+
+            if (!this._pAcceptDialog) {
+
+                this._pAcceptDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "com.ep.zgiftscockpit.view.fragments.MainAcceptDialog",
+                    controller: this
+                }).then((oDialog) => {
+                    oView.addDependent(oDialog);
+                    oDialog.setBindingContext(oContext);
+                    oDialog.open();
+                    return oDialog;
+                });
+
+            } else {
+                this._pAcceptDialog.then((oDialog) => {
+                    oDialog.setBindingContext(oContext);
                     oDialog.open();
                 });
             }

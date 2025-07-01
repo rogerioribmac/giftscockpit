@@ -9,65 +9,28 @@
     
     <Dialog
         id="itemDetailsDialog"
-        title="{parts: [
-                {path: 'i18n>Main.ModifyHeaderReserv'},
-                {path: 'reservationNo'}
-            ],
-            formatter: '.formatDialogModifyHeaderTitle'}"
+        title="{i18n>Main.ModifyHeader}"
         contentWidth="60%"
         draggable="true"
         resizable="true"
         class="sapUiContentPadding" >
-
-        <!-- <f:SimpleForm
-            id="idModifyHeaderForm"
-            layout="ResponsiveGridLayout"
-            editable="true"
-            class="sapUiSmallMarginBeginEnd">
-
-            <Label text="{i18n>Item.DG}" />
-            <Input value="{dg}" />
-
-            <Label text="{i18n>Item.EventOrganizer}" />
-            <Input value="{eventOrganizer}" />
-
-            <Label text="{i18n>Item.ContactPerson}" />
-            <Input value="{contactPerson}" />
-
-            <Label text="{i18n>Item.Service}" />
-            <Input value="{service}" />
-
-            <Label text="{i18n>Item.EventName}" />
-            <Input value="{eventName}" />
-
-            <Label text="{i18n>Item.EventCountry}" />
-            <Input value="{eventCountryTxt}" />
-
-            <Label text="{i18n>Item.EventDate}" />
-            <DatePicker value="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }" />
-
-            <Label text="{i18n>Item.NeedByDate}" />
-            <DatePicker value="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }" />
-
-            <Label text="{i18n>Item.Requestor}" />
-            <Input value="{requestor}" />
-
-            <Label text="{i18n>Item.Comment}" />
-            <TextArea value="{pickupComment}" rows="4" />
-
-        </f:SimpleForm> -->
            
         <smartForm:SmartForm 
             id="idSmartFormModHeader"
-            editTogglable="true" 
-            title="{reservationNo}"
+            editTogglable="false" 
+            title="{parts: [
+                {path: 'i18n>Main.Reservation'},
+                {path: 'reservationNo'}
+            ],
+            formatter: '.formatDialogModifyHeaderTitle'}"
             editable="true"
             flexEnabled="false">
+
             <smartForm:Group>
                 <smartForm:GroupElement>
-                    <smartField:SmartField value="{dg}" editable="true" />
+                    <smartField:SmartField value="{dg}" />
                 </smartForm:GroupElement>
-                <!-- <smartForm:GroupElement>
+                <smartForm:GroupElement>
                     <smartField:SmartField value="{eventOrganizer}" />
                 </smartForm:GroupElement>
                 <smartForm:GroupElement>
@@ -81,7 +44,7 @@
                     <smartField:SmartField value="{eventName}" />
                 </smartForm:GroupElement>
                 <smartForm:GroupElement>
-                    <smartField:SmartField value="{eventCountryTxt}" />
+                    <smartField:SmartField value="{eventCountry}" />
                 </smartForm:GroupElement>
                 <smartForm:GroupElement>
                     <smartField:SmartField value="{eventDate}" />
@@ -94,7 +57,7 @@
                 </smartForm:GroupElement>
                 <smartForm:GroupElement>
                     <smartField:SmartField value="{pickupComment}" />
-                </smartForm:GroupElement> -->
+                </smartForm:GroupElement>
             </smartForm:Group>
         </smartForm:SmartForm>
 
