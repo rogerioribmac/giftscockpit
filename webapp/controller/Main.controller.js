@@ -1,15 +1,16 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/Fragment",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "sap/m/MessageToast"
 ],
-function (Controller, Fragment, MessageBox) {
+function (Controller, Fragment, MessageBox, MessageToast) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Main", {
         
         onInit: function(oEvent){
-
+debugger;
             var oSmartTable = this.byId("idSmartTable");
             oSmartTable.applyVariant({
                 sort: {
@@ -18,6 +19,26 @@ function (Controller, Fragment, MessageBox) {
                         operation:"Descending"}
                     ]
                 }
+            });
+
+            // set "event date" by default with today - 180 days
+            var oSmartFilterBar = this.byId("smartFilterBar");
+            oSmartFilterBar.attachInitialise(function() {
+                debugger;
+                var oEventDate = new Date();
+                oEventDate.setDate(oEventDate.getDate() - 180 );
+                var sDate = oEventDate.toISOString().slice(0, 10);
+
+                oSmartFilterBar.setFilterData({
+                    eventDate: {
+                      ranges: [{
+                        operation: "GE",
+                        keyField: "zz_date",
+                        value1: sDate,
+                        exclude: false
+                      }]
+                    }
+                });
             });
 
         },
@@ -85,7 +106,7 @@ function (Controller, Fragment, MessageBox) {
             } else {
                 const oBundle = this.getView().getModel("i18n").getResourceBundle();
                 const sMessage = oBundle.getText("Main.ErrorMsgSelectLineModify");
-                sap.m.MessageToast.show(sMessage);
+                MessageToast.show(sMessage);
             }
 
         },
@@ -154,13 +175,13 @@ function (Controller, Fragment, MessageBox) {
 
             oModel.submitChanges({
                 success: function (oSuccess) {
-                    sap.m.MessageToast.show(oResourceBundle.getText("Main.ChangesSaved"));
+                    MessageToast.show(oResourceBundle.getText("Main.ChangesSaved"));
                     this._pHeaderDialog.then(function (oDialog) {
                         oDialog.close();
                     });
                 }.bind(this),
                 error: function (oError) {
-                    sap.m.MessageToast.show(oResourceBundle.getText("Main.SaveError"));
+                    MessageToast.show(oResourceBundle.getText("Main.SaveError"));
                 }.bind(this)
             });
 
@@ -181,10 +202,10 @@ function (Controller, Fragment, MessageBox) {
             
             if (oSelected.length == 0){
                 const sMessage = oBundle.getText("Main.ErrorMsgSelectLineAccept");
-                sap.m.MessageToast.show(sMessage);
+                MessageToast.show(sMessage);
             } else if (oSelected.length > 1){
                 const sMessage = oBundle.getText("Main.ErrorMsgSelectLineAccept");
-                sap.m.MessageToast.show(sMessage);
+                MessageToast.show(sMessage);
             } else {
 
                 this._openDialogAccept(oSelected);
@@ -201,6 +222,7 @@ function (Controller, Fragment, MessageBox) {
             const sReservationNo = oContext.getProperty("reservationNo");
             var oTextArea = this.byId("idAcceptTextArea");
             const sReason = oTextArea.getValue();
+            const oBundle = this.getView().getModel("i18n").getResourceBundle();
 
             oModel.callFunction("/allowReservation", {
                 method: "POST",
@@ -209,25 +231,43 @@ function (Controller, Fragment, MessageBox) {
                     Reason: sReason
                 },
                 success: function(oData, oResponse) {
-                    const aMessages = oResponse && oResponse.headers && oResponse.headers["sap-message"];
-                    if (aMessages) {
-                        const oMessage = JSON.parse(aMessages);
-                        sap.m.MessageToast.show(oMessage.message);
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oBundle.getText("Main.AcceptErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                        
+                        this._pAcceptDialog.then(oDialog => oDialog.close());
                     }
-                    this._pAcceptDialog.then(function (oDialog) {
-                        oDialog.close();
-                    });
-                },
-                error: function(oError) {
-                    const aMessages = oResponse && oResponse.headers && oResponse.headers["sap-message"];
-                    if (aMessages) {
-                        const oMessage = JSON.parse(aMessages);
-                        sap.m.MessageToast.show(oMessage.message);
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+
+                    var oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            // const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                            const sErrorMessage = oBundle.getText("Main.AcceptErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        // const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                        const sErrorMessage = oBundle.getText("Main.AcceptErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                        this._pAcceptDialog.then(oDialog => oDialog.close());
                     }
-                    this._pAcceptDialog.then(function (oDialog) {
-                        oDialog.close();
-                    });
-                }
+                    
+                }.bind(this)
             });
 
         },
