@@ -43,10 +43,21 @@ function (Controller, Fragment, MessageBox) {
                     if (oIconTabBar){
                         var oItems = oIconTabBar.getItems();
                         if (oItems && oItems.length > 0){
+
                             var oFirstItem = oItems[0];
                             var sFirstKey = oFirstItem.getKey();
                             oIconTabBar.setSelectedKey(sFirstKey);
-                            this._filterSmartTable(sFirstKey);
+
+                            var oSmartTable = this.byId("idSmartTable");
+                            var oTable = oSmartTable.getTable();
+                            if (oTable) {
+                                oSmartTable.setBusy(true);
+                                oTable.attachEventOnce("updateFinished", function () {
+                                    this._filterSmartTable(sFirstKey);
+                                    oSmartTable.setBusy(false);
+                                }, this);
+                            }
+
                         }
                     }
 
@@ -162,7 +173,7 @@ function (Controller, Fragment, MessageBox) {
         },
 
         onAllowReservation: function(oEvent){
-            debugger;
+
             var oModel = this.getView().getModel();
             var oSmartTable = this.getView()?.byId("idSmartTable");
             var oSelected = oSmartTable?.getTable()?.getSelectedItems();
@@ -184,7 +195,6 @@ function (Controller, Fragment, MessageBox) {
 
         onAcceptYes: function(oEvent){
 
-            debugger;
             var oModel = this.getView().getModel();
             var oDialog = this.byId("idAcceptDialog");
             var oContext = oDialog.getBindingContext();
