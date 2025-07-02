@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="SAP__common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="SAP__measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="Org.OData.Core.V1" Alias="SAP__core"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="SAP__capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="SAP__aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="SAP__validation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="SAP__UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_HTML5',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.HTML5.v1" Alias="SAP__HTML5"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PDF',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.PDF.v1" Alias="SAP__PDF"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_SESSION',Version='0001',SAP__Origin='ECC')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Session.v1" Alias="SAP__session"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001" Alias="SAP__self">
+            <Annotation Term="SAP__core.SchemaVersion" String="1.0.0"/>
+            <EntityType Name="zz_pv_gifts_ckpt_reservationsType">
+                <Key>
+                    <PropertyRef Name="reservationNo"/>
+                </Key>
+                <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="dg" Type="Edm.String" Nullable="false" MaxLength="60"/>
+                <Property Name="service" Type="Edm.String" Nullable="false" MaxLength="60"/>
+                <Property Name="contactPerson" Type="Edm.String" Nullable="false" MaxLength="80"/>
+                <Property Name="eventOrganizer" Type="Edm.String" Nullable="false" MaxLength="80"/>
+                <Property Name="eventName" Type="Edm.String" Nullable="false" MaxLength="50"/>
+                <Property Name="eventDate" Type="Edm.Date"/>
+                <Property Name="needByDate" Type="Edm.Date"/>
+                <Property Name="eventCountry" Type="Edm.String" Nullable="false" MaxLength="3"/>
+                <Property Name="eventCountryTxt" Type="Edm.String" Nullable="false" MaxLength="15"/>
+                <Property Name="reservationStatus" Type="Edm.String" Nullable="false" MaxLength="1"/>
+                <Property Name="reservationStatusTxt" Type="Edm.String" Nullable="false" MaxLength="60"/>
+                <Property Name="pickupDate" Type="Edm.Date"/>
+                <Property Name="pickupTime" Type="Edm.TimeOfDay" Nullable="false"/>
+                <Property Name="pickupDuration" Type="Edm.String" Nullable="false" MaxLength="2"/>
+                <Property Name="pickupComment" Type="Edm.String" Nullable="false" MaxLength="120"/>
+                <Property Name="protocolResponsible" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="missionCancDate" Type="Edm.Date"/>
+                <Property Name="requestor" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="__EntityControl" Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.EntityControl"/>
+                <Property Name="__OperationControl" Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsOperationControl"/>
+                <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.SAP__Message)" Nullable="false"/>
+                <NavigationProperty Name="_items" Type="Collection(com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_itemsType)" Partner="_reservation">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="zz_pv_gifts_ckpt_status_countType">
+                <Key>
+                    <PropertyRef Name="reservationStatus"/>
+                </Key>
+                <Property Name="reservationStatus" Type="Edm.String" Nullable="false" MaxLength="1"/>
+                <Property Name="sequence" Type="Edm.Byte" Nullable="false"/>
+                <Property Name="icon" Type="Edm.String" Nullable="false" MaxLength="50"/>
+                <Property Name="description" Type="Edm.String" Nullable="false" MaxLength="50"/>
+                <Property Name="totalRows" Type="Edm.Int32" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="zz_pv_gifts_ckpt_itemsType">
+                <Key>
+                    <PropertyRef Name="reservationNo"/>
+                    <PropertyRef Name="reservationItem"/>
+                </Key>
+                <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="reservationItem" Type="Edm.String" Nullable="false" MaxLength="4"/>
+                <Property Name="materialNo" Type="Edm.String" Nullable="false" MaxLength="18"/>
+                <Property Name="materialTxt" Type="Edm.String" Nullable="false" MaxLength="40"/>
+                <Property Name="plant" Type="Edm.String" Nullable="false" MaxLength="4"/>
+                <Property Name="plantTxt" Type="Edm.String" Nullable="false" MaxLength="30"/>
+                <Property Name="function" Type="Edm.String" Nullable="false" MaxLength="50"/>
+                <Property Name="firstName" Type="Edm.String" Nullable="false" MaxLength="40"/>
+                <Property Name="lastName" Type="Edm.String" Nullable="false" MaxLength="40"/>
+                <Property Name="recipientCountry" Type="Edm.String" Nullable="false" MaxLength="3"/>
+                <Property Name="recipientCountryTxt" Type="Edm.String" Nullable="false" MaxLength="15"/>
+                <Property Name="unitOfMeasure" Type="Edm.String" Nullable="false" MaxLength="3"/>
+                <Property Name="reservedQuantity" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
+                <Property Name="deliveredQuantity" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
+                <Property Name="confirmedDeliveredQuantity" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
+                <Property Name="preparedQuantity" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
+                <Property Name="DeliveredDate" Type="Edm.Date"/>
+                <Property Name="commentTxt" Type="Edm.String" Nullable="false" MaxLength="125"/>
+                <Property Name="finalIssueReservation" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="GMReservationAllowed" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="postReventRemark" Type="Edm.String" Nullable="false" MaxLength="125"/>
+                <Property Name="quantityFixed" Type="Edm.Boolean" Nullable="false"/>
+                <NavigationProperty Name="_reservation" Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsType" Nullable="false" Partner="_items">
+                    <ReferentialConstraint Property="reservationNo" ReferencedProperty="reservationNo"/>
+                </NavigationProperty>
+            </EntityType>
+            <ComplexType Name="zz_pv_gifts_ckpt_reservationsOperationControl">
+                <Property Name="allowReservation" Type="Edm.Boolean" Nullable="false"/>
+            </ComplexType>
+            <ComplexType Name="EntityControl">
+                <Property Name="Deletable" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="Updatable" Type="Edm.Boolean" Nullable="false"/>
+            </ComplexType>
+            <ComplexType Name="SAP__Message">
+                <Property Name="code" Type="Edm.String" Nullable="false"/>
+                <Property Name="message" Type="Edm.String" Nullable="false"/>
+                <Property Name="target" Type="Edm.String"/>
+                <Property Name="additionalTargets" Type="Collection(Edm.String)" Nullable="false"/>
+                <Property Name="transition" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="numericSeverity" Type="Edm.Byte" Nullable="false"/>
+                <Property Name="longtextUrl" Type="Edm.String"/>
+            </ComplexType>
+            <Action Name="allowReservation" EntitySetPath="_it" IsBound="true">
+                <Parameter Name="_it" Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsType" Nullable="false"/>
+                <Parameter Name="REASON" Type="Edm.String" Nullable="false"/>
+                <ReturnType Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsType" Nullable="false"/>
+            </Action>
+            <EntityContainer Name="Container">
+                <EntitySet Name="zz_pv_gifts_ckpt_items" EntityType="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_itemsType">
+                    <NavigationPropertyBinding Path="_reservation" Target="zz_pv_gifts_ckpt_reservations"/>
+                </EntitySet>
+                <EntitySet Name="zz_pv_gifts_ckpt_reservations" EntityType="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsType">
+                    <NavigationPropertyBinding Path="_items" Target="zz_pv_gifts_ckpt_items"/>
+                </EntitySet>
+                <EntitySet Name="zz_pv_gifts_ckpt_status_count" EntityType="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_status_countType"/>
+            </EntityContainer>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/reservationNo">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__common.IsDigitSequence"/>
+                <Annotation Term="SAP__common.Label" String="Reservation"/>
+                <Annotation Term="SAP__common.Heading" String="Reserv.no."/>
+                <Annotation Term="SAP__common.QuickInfo" String="Number of reservation/dependent requirements"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/eventCountry">
+                <Annotation Term="SAP__common.Text" Path="eventCountryTxt">
+                    <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/zz_dd_gifts_ckpt_sh_country/0001;ps='srvd-zz_sd_gifts_cockpit-0001';va='com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.et-zz_pv_gifts_ckpt_reservations.eventcountry'/$metadata</String>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__common.ValueListWithFixedValues"/>
+                <Annotation Term="SAP__common.Label" String="Event Country"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/eventCountryTxt">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__common.Label" String="Country/Region Name"/>
+                <Annotation Term="SAP__common.Heading" String="Country/Reg. Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Name of Country/Region (Short)"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/reservationStatus">
+                <Annotation Term="SAP__common.Text" Path="reservationStatusTxt">
+                    <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="SAP__common.Label" String="Reservation status"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/reservationStatusTxt">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__common.Label" String="Short Description"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Short Text for Fixed Values"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/protocolResponsible">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Protocol responsible"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/requestor">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="User Name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/__EntityControl">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__UI.HiddenFilter"/>
+                <Annotation Term="SAP__UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/__OperationControl">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__UI.HiddenFilter"/>
+                <Annotation Term="SAP__UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/_items">
+                <Annotation Term="SAP__common.Composition"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/zz_pv_gifts_ckpt_reservations">
+                <Annotation Term="SAP__capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_items"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>__EntityControl</PropertyPath>
+                                <PropertyPath>__OperationControl</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>__EntityControl</PropertyPath>
+                                <PropertyPath>__OperationControl</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Path="__EntityControl/Deletable"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Path="__EntityControl/Updatable"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.allowReservation(SAP__self.zz_pv_gifts_ckpt_reservationsType)">
+                <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/allowReservation"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/dg">
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/zz_dd_gifts_ckpt_sh_dg/0001;ps='srvd-zz_sd_gifts_cockpit-0001';va='com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.et-zz_pv_gifts_ckpt_reservations.dg'/$metadata</String>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__common.ValueListWithFixedValues"/>
+                <Annotation Term="SAP__common.Label" String="DG"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/eventOrganizer">
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/zz_dd_gifts_ckpt_sh_organizer/0001;ps='srvd-zz_sd_gifts_cockpit-0001';va='com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.et-zz_pv_gifts_ckpt_reservations.eventorganizer'/$metadata</String>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__common.ValueListWithFixedValues"/>
+                <Annotation Term="SAP__common.Label" String="Event organiser"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Event organizer"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType">
+                <Annotation Term="SAP__common.Label" String="Gifts Cockpit - Reservations"/>
+                <Annotation Term="SAP__UI.LineItem">
+                    <Collection>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="reservationNo"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="reservationStatus"/>
+                            <Annotation Term="SAP__HTML5.CssDefaults">
+                                <Record>
+                                    <PropertyValue Property="width" String="10rem"/>
+                                </Record>
+                            </Annotation>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="dg"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="eventOrganizer"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="contactPerson"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="service"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="eventName"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="eventCountry"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="eventDate"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="needByDate"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="requestor"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="pickupComment"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>reservationNo</PropertyPath>
+                        <PropertyPath>dg</PropertyPath>
+                        <PropertyPath>eventOrganizer</PropertyPath>
+                        <PropertyPath>eventDate</PropertyPath>
+                        <PropertyPath>eventName</PropertyPath>
+                        <PropertyPath>eventCountry</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType">
+                <Annotation Term="SAP__common.Label" String="PV - Status Counter last year"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/zz_pv_gifts_ckpt_status_count">
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/reservationNo">
+                <Annotation Term="SAP__common.IsDigitSequence"/>
+                <Annotation Term="SAP__common.Label" String="Reservation"/>
+                <Annotation Term="SAP__common.Heading" String="Reserv.no."/>
+                <Annotation Term="SAP__common.QuickInfo" String="Number of reservation/dependent requirements"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/reservationItem">
+                <Annotation Term="SAP__common.IsDigitSequence"/>
+                <Annotation Term="SAP__common.Label" String="Item no."/>
+                <Annotation Term="SAP__common.Heading" String="Itm"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Item Number of Reservation / Dependent Requirements"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/materialNo">
+                <Annotation Term="SAP__common.Text" Path="materialTxt">
+                    <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Material"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Material Number"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/plant">
+                <Annotation Term="SAP__common.Text" Path="plantTxt">
+                    <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Plant"/>
+                <Annotation Term="SAP__common.Heading" String="Plnt"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/recipientCountry">
+                <Annotation Term="SAP__common.Text" Path="recipientCountryTxt">
+                    <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextFirst"/>
+                </Annotation>
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Country of recipient"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/unitOfMeasure">
+                <Annotation Term="SAP__common.IsUnit"/>
+                <Annotation Term="SAP__common.Label" String="Base Unit of Measure"/>
+                <Annotation Term="SAP__common.Heading" String="BUn"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/reservedQuantity">
+                <Annotation Term="SAP__measures.Unit" Path="unitOfMeasure"/>
+                <Annotation Term="SAP__common.Label" String="Requirement Quantity"/>
+                <Annotation Term="SAP__common.Heading" String="Reqmnt qty"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/deliveredQuantity">
+                <Annotation Term="SAP__measures.Unit" Path="unitOfMeasure"/>
+                <Annotation Term="SAP__common.Label" String="Quantity withdrawn"/>
+                <Annotation Term="SAP__common.Heading" String="Qty withdrawn"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/confirmedDeliveredQuantity">
+                <Annotation Term="SAP__measures.Unit" Path="unitOfMeasure"/>
+                <Annotation Term="SAP__common.Label" String="Confirm qty deliver"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/preparedQuantity">
+                <Annotation Term="SAP__common.Label" String="Prepared Quantity"/>
+                <Annotation Term="SAP__measures.Unit" Path="unitOfMeasure"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/finalIssueReservation">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Final Issue"/>
+                <Annotation Term="SAP__common.Heading" String="FIs"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Final Issue for Reservation"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/GMReservationAllowed">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Movement allowed"/>
+                <Annotation Term="SAP__common.Heading" String="Mvt"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Goods movement for reservation allowed"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/quantityFixed">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Quantity is fixed"/>
+                <Annotation Term="SAP__common.Heading" String="Fix"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/zz_pv_gifts_ckpt_items">
+                <Annotation Term="SAP__capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_reservation"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection/>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="plant"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="recipientCountry"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="reservedQuantity"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="deliveredQuantity"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="confirmedDeliveredQuantity"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="preparedQuantity"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="finalIssueReservation"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="GMReservationAllowed"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="quantityFixed"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType">
+                <Annotation Term="SAP__common.Label" String="Gifts Cockpit - Items"/>
+                <Annotation Term="SAP__UI.LineItem">
+                    <Collection>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="reservationItem"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="plant"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="materialNo"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="function"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="firstName"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="lastName"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="recipientCountry"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="reservedQuantity"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="confirmedDeliveredQuantity"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="deliveredQuantity"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="preparedQuantity"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="DeliveredDate"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="commentTxt"/>
+                            <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.Container">
+                <Annotation Term="SAP__CodeList.UnitsOfMeasure">
+                    <Record>
+                        <PropertyValue Property="Url" String="../../../../default/iwbep/common/0001/$metadata"/>
+                        <PropertyValue Property="CollectionPath" String="UnitsOfMeasure"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__aggregation.ApplySupported">
+                    <Record>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                                <String>filter</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Rollup" EnumMember="SAP__aggregation.RollupType/None"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                <Annotation Term="SAP__capabilities.FilterFunctions">
+                    <Collection>
+                        <String>eq</String>
+                        <String>ne</String>
+                        <String>gt</String>
+                        <String>ge</String>
+                        <String>lt</String>
+                        <String>le</String>
+                        <String>and</String>
+                        <String>or</String>
+                        <String>contains</String>
+                        <String>startswith</String>
+                        <String>endswith</String>
+                        <String>any</String>
+                        <String>all</String>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.SupportedFormats">
+                    <Collection>
+                        <String>application/json</String>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/materialTxt">
+                <Annotation Term="SAP__UI.Hidden"/>
+                <Annotation Term="SAP__common.Label" String="Material Description"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/plantTxt">
+                <Annotation Term="SAP__UI.Hidden"/>
+                <Annotation Term="SAP__common.Label" String="Name 1"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/recipientCountryTxt">
+                <Annotation Term="SAP__UI.Hidden"/>
+                <Annotation Term="SAP__common.Label" String="Country/Region Name"/>
+                <Annotation Term="SAP__common.Heading" String="Country/Reg. Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Name of Country/Region (Short)"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/service">
+                <Annotation Term="SAP__common.Label" String="Service of ct.pers"/>
+                <Annotation Term="SAP__common.Heading" String="Service of Contact Person"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Service of Contact Person"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/contactPerson">
+                <Annotation Term="SAP__common.Label" String="Contact Person"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/eventName">
+                <Annotation Term="SAP__common.Label" String="Event name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/eventDate">
+                <Annotation Term="SAP__common.Label" String="Event Date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/needByDate">
+                <Annotation Term="SAP__common.Label" String="Need-by Date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/pickupDate">
+                <Annotation Term="SAP__common.Label" String="Pickup date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/pickupTime">
+                <Annotation Term="SAP__common.Label" String="Pickup time"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/pickupDuration">
+                <Annotation Term="SAP__common.Label" String="Pickup duration"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/pickupComment">
+                <Annotation Term="SAP__common.Label" String="Pickup comment"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/missionCancDate">
+                <Annotation Term="SAP__common.Label" String="Mission cancelled"/>
+                <Annotation Term="SAP__common.Heading" String="Mission cancelled date"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Mission cancelled date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/reservationStatus">
+                <Annotation Term="SAP__common.Label" String="Reservation status"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/sequence">
+                <Annotation Term="SAP__common.Label" String="SAPUI5 Sequence"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/icon">
+                <Annotation Term="SAP__common.Label" String="SAPUI5 Icon"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/description">
+                <Annotation Term="SAP__common.Label" String="Status description"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/function">
+                <Annotation Term="SAP__common.Label" String="Function"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/firstName">
+                <Annotation Term="SAP__common.Label" String="First name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/lastName">
+                <Annotation Term="SAP__common.Label" String="Last name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/DeliveredDate">
+                <Annotation Term="SAP__common.Label" String="Delivery date"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Gifts delivery date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/commentTxt">
+                <Annotation Term="SAP__common.Label" String="Item Comments"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Comment"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/postReventRemark">
+                <Annotation Term="SAP__common.Label" String="Post event remark"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

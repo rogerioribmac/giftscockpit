@@ -33,6 +33,15 @@
           "localUri": "localService/mainService/metadata.xml",
           "odataVersion": "2.0"
         }
+      },
+      "v4Service": {
+        "uri": "/sap/opu/odata4/sap/zz_sb_gifts_cockpit_v4/srvd/sap/zz_sd_gifts_cockpit/0001/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/v4Service/metadata.xml",
+          "odataVersion": "4.0"
+        }
       }
     }
   },
@@ -76,7 +85,18 @@
         "dataSource": "mainService",
         "preload": true,
         "settings": {
+          "defaultCountMode": "Inline",
           "defaultBindingMode": "TwoWay"
+        }
+      },
+      "v4Service": {
+        "dataSource": "v4Service",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
         }
       }
     },

@@ -2,15 +2,17 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
 ],
-function (Controller, Fragment, MessageBox, MessageToast) {
+function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Main", {
         
         onInit: function(oEvent){
-debugger;
+
             var oSmartTable = this.byId("idSmartTable");
             oSmartTable.applyVariant({
                 sort: {
@@ -21,25 +23,34 @@ debugger;
                 }
             });
 
-            // set "event date" by default with today - 180 days
-            var oSmartFilterBar = this.byId("smartFilterBar");
-            oSmartFilterBar.attachInitialise(function() {
-                debugger;
-                var oEventDate = new Date();
-                oEventDate.setDate(oEventDate.getDate() - 180 );
-                var sDate = oEventDate.toISOString().slice(0, 10);
+            // Set growing
+            oSmartTable.getTable().setGrowing(true);
+            oSmartTable.getTable().setGrowingScrollToLoad(true);
+            oSmartTable.getTable().setGrowingThreshold(100);
 
-                oSmartFilterBar.setFilterData({
-                    eventDate: {
-                      ranges: [{
-                        operation: "GE",
-                        keyField: "zz_date",
-                        value1: sDate,
-                        exclude: false
-                      }]
-                    }
-                });
-            });
+            // // set "event date" by default with today - 180 days
+            // var oSmartFilterBar = this.byId("smartFilterBar");
+            // oSmartFilterBar.attachInitialise(function() {
+
+            //     var oEventDate = new Date();
+            //     oEventDate.setDate(oEventDate.getDate() - 180 );
+            //     var sDate = oEventDate.toISOString().slice(0, 10);
+
+            //     oSmartFilterBar.setFilterData({
+            //         eventDate: {
+            //           ranges: [{
+            //             operation: "GE",
+            //             keyField: "zz_date",
+            //             value1: sDate,
+            //             exclude: false
+            //           }]
+            //         }
+            //     });
+
+            // });
+
+            var oSmartFilterBar = this.byId("smartFilterBar");
+            oSmartFilterBar.attachSearch(this._recalculateIconTabBarCount, this);
 
         },
 
@@ -55,7 +66,7 @@ debugger;
         },
 
         onAfterRendering: function(oEvent){
-            
+
             var oIconTabBar = this.byId("iconTabBar");
             if (oIconTabBar){
                 oIconTabBar.getBinding("items").attachEventOnce("change", function(){
@@ -79,7 +90,10 @@ debugger;
                                 }, this);
                             }
 
+                            this._recalculateIconTabBarCount();
+
                         }
+                       
                     }
 
                 }, this);
@@ -396,11 +410,42 @@ debugger;
             var aFilters = [];
 
             if (sKey && sKey != "A") { 
-                aFilters.push(new sap.ui.model.Filter("reservationStatus", sap.ui.model.FilterOperator.EQ, sKey));
+                aFilters.push(new Filter("reservationStatus", FilterOperator.EQ, sKey));
             }
 
             var oTable = oSmartTable.getTable();
             oTable.getBinding("items").filter(aFilters);
+
+        },
+
+        _recalculateIconTabBarCount: function(){
+
+            var oIconTabBar = this.byId("iconTabBar");
+            var oItems = oIconTabBar.getItems();
+            var aFilters = this.byId("smartFilterBar")?.getFilters();
+            oItems.forEach((oItem) => {
+
+                var sStatus = oItem.getKey();
+                var sPath = "/zz_pv_gifts_ckpt_reservations/$count";
+                var aAllFilters = aFilters.slice();
+                if (sStatus !== 'A') {  // se quiser filtrar por status diferente de 'A'
+                    aAllFilters.push(new Filter("reservationStatus", FilterOperator.EQ, sStatus));
+                }
+
+                var mParameters = {
+                    filters: aAllFilters,
+                    success: function (sCount) {
+                        oItem.setCount(sCount);
+                    },
+                    error: function (oError) {
+                        oItem.setCount(0);
+                    }
+                };
+
+                var oModel = this.getView().getModel();
+                oModel.read(sPath, mParameters);
+
+            });
 
         }
 

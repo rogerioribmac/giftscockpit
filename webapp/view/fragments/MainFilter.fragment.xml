@@ -1,11 +1,13 @@
 <core:FragmentDefinition 
     xmlns="sap.m"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:fb="sap.ui.comp.smartfilterbar"
+    xmlns:item="sap.ui.comp.filterbar"
     xmlns:core="sap.ui.core" >
-    
-    <smartFilterBar:SmartFilterBar 
+
+    <fb:SmartFilterBar 
         id="smartFilterBar" 
         entitySet="zz_pv_gifts_ckpt_reservations" 
-        persistencyKey="SmartFilter_Explored" />
+        persistencyKey="SmartFilter_Explored"
+        useDateRangeType="true" />
 
 </core:FragmentDefinition>

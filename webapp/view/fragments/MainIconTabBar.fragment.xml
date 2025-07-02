@@ -9,14 +9,14 @@
         expandable="false"
         select="onIconTabBarSelect"
         items="{
-            path: '/zz_pv_gifts_ckpt_status_count',
+            path: '/zz_pv_gifts_ckpt_status',
             sorter: [{ path: 'sequence', descending: false }]
         }">
         <items>
             <IconTabFilter
                 key="{reservationStatus}"
                 text="{description}"
-                count="{totalRows}"
+     
                 icon="{icon}" />
         </items>
     </IconTabBar>
