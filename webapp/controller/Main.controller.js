@@ -28,27 +28,6 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             oSmartTable.getTable().setGrowingScrollToLoad(true);
             oSmartTable.getTable().setGrowingThreshold(100);
 
-            // // set "event date" by default with today - 180 days
-            // var oSmartFilterBar = this.byId("smartFilterBar");
-            // oSmartFilterBar.attachInitialise(function() {
-
-            //     var oEventDate = new Date();
-            //     oEventDate.setDate(oEventDate.getDate() - 180 );
-            //     var sDate = oEventDate.toISOString().slice(0, 10);
-
-            //     oSmartFilterBar.setFilterData({
-            //         eventDate: {
-            //           ranges: [{
-            //             operation: "GE",
-            //             keyField: "zz_date",
-            //             value1: sDate,
-            //             exclude: false
-            //           }]
-            //         }
-            //     });
-
-            // });
-
             var oSmartFilterBar = this.byId("smartFilterBar");
             oSmartFilterBar.attachSearch(this._recalculateIconTabBarCount, this);
 
@@ -105,6 +84,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             var sSelectedKey = oEvent.getParameter("selectedKey");
             this._filterSmartTable(sSelectedKey);
+            this._enableFooterButtons(sSelectedKey);
 
         },
 
@@ -255,7 +235,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                             const sSuccessMessage = oBundle.getText("Main.AcceptErrorMsg");
                             MessageBox.success(sSuccessMessage);
                         }
-                        
+                        this._recalculateIconTabBarCount();
                         this._pAcceptDialog.then(oDialog => oDialog.close());
                     }
 
@@ -269,12 +249,10 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                         if (sMessage) {
                             MessageBox.error(sMessage);
                         } else {
-                            // const oBundle = this.getView().getModel("i18n").getResourceBundle();
                             const sErrorMessage = oBundle.getText("Main.AcceptErrorMsg");
                             MessageBox.error(sErrorMessage);
                         }
                     } catch (e) {
-                        // const oBundle = this.getView().getModel("i18n").getResourceBundle();
                         const sErrorMessage = oBundle.getText("Main.AcceptErrorMsg");
                         MessageBox.error(sErrorMessage);
                     } finally {
@@ -398,6 +376,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             } else {
                 this._pAcceptDialog.then((oDialog) => {
                     oDialog.setBindingContext(oContext);
+                    this.byId("idAcceptTextArea")?.setValue();
                     oDialog.open();
                 });
             }
@@ -428,7 +407,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 var sStatus = oItem.getKey();
                 var sPath = "/zz_pv_gifts_ckpt_reservations/$count";
                 var aAllFilters = aFilters.slice();
-                if (sStatus !== 'A') {  // se quiser filtrar por status diferente de 'A'
+                if (sStatus !== 'A') { 
                     aAllFilters.push(new Filter("reservationStatus", FilterOperator.EQ, sStatus));
                 }
 
@@ -446,6 +425,18 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 oModel.read(sPath, mParameters);
 
             });
+
+        },
+
+        _enableFooterButtons: function(sKey){
+
+            if (sKey == '3'){
+                this.byId("idMainApproveBtn")?.setEnabled(true);
+                this.byId("idMainRejectBtn")?.setEnabled(true);
+            } else {
+                this.byId("idMainApproveBtn")?.setEnabled(false);
+                this.byId("idMainRejectBtn")?.setEnabled(false);
+            }
 
         }
 
