@@ -360,27 +360,35 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
         _openDialogAccept: function(oSelected){
 
             const oContext = oSelected[0].getBindingContext();
-            const oView = this.getView();  
+            const oView = this.getView(); 
+            const sStatus = oContext.getProperty("reservationStatus"); 
 
-            if (!this._pAcceptDialog) {
+            if (sStatus == '3'){
 
-                this._pAcceptDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "com.ep.zgiftscockpit.view.fragments.MainAcceptDialog",
-                    controller: this
-                }).then((oDialog) => {
-                    oView.addDependent(oDialog);
-                    oDialog.setBindingContext(oContext);
-                    oDialog.open();
-                    return oDialog;
-                });
+                if (!this._pAcceptDialog) {
 
+                    this._pAcceptDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "com.ep.zgiftscockpit.view.fragments.MainAcceptDialog",
+                        controller: this
+                    }).then((oDialog) => {
+                        oView.addDependent(oDialog);
+                        oDialog.setBindingContext(oContext);
+                        oDialog.open();
+                        return oDialog;
+                    });
+
+                } else {
+                    this._pAcceptDialog.then((oDialog) => {
+                        oDialog.setBindingContext(oContext);
+                        this.byId("idAcceptTextArea")?.setValue();
+                        oDialog.open();
+                    });
+                }
             } else {
-                this._pAcceptDialog.then((oDialog) => {
-                    oDialog.setBindingContext(oContext);
-                    this.byId("idAcceptTextArea")?.setValue();
-                    oDialog.open();
-                });
+                const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                const sMessage = oBundle.getText("Main.ErrorMsgAllowStatus");
+                MessageToast.show(sMessage);
             }
 
         },
@@ -432,7 +440,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         _enableFooterButtons: function(sKey){
 
-            if (sKey == '3'){
+            if (sKey == '3' || sKey == 'A'){
                 this.byId("idMainApproveBtn")?.setEnabled(true);
                 this.byId("idMainRejectBtn")?.setEnabled(true);
             } else {
