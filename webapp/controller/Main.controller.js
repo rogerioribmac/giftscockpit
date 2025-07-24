@@ -31,6 +31,8 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             var oSmartFilterBar = this.byId("smartFilterBar");
             oSmartFilterBar.attachSearch(this._recalculateIconTabBarCount, this);
 
+            this._setInitialFilter();
+
         },
 
         onItemPress: function(oEvent){
@@ -437,6 +439,30 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 this.byId("idMainApproveBtn")?.setEnabled(false);
                 this.byId("idMainRejectBtn")?.setEnabled(false);
             }
+
+        },
+
+        _setInitialFilter: function(){
+
+            var oSmartFilterBar = this.byId("smartFilterBar");
+
+            oSmartFilterBar?.attachInitialise(() => {
+
+                oSmartFilterBar?.setFilterData({
+                    eventDate: {
+                        conditionTypeInfo: {
+                            data: {
+                                key: "eventDate",
+                                operation: "TODAYFROMTO",
+                                value1: 180,
+                                value2: 180
+                            },
+                            name: "sap.ui.comp.config.condition.DateRangeType"
+                        }
+                    }
+                });
+
+            });
 
         }
 

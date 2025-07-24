@@ -26,31 +26,45 @@
     </edmx:Reference>
     <edmx:DataServices>
         <Schema Namespace="zz_sb_gifts_cockpit_v2_van.v1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/materialTxt">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="zz_delegation"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>zz_delegation</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType/materialTxt">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/plantTxt">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType/plantTxt">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/recipientCountryTxt">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType/recipientCountryTxt">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/materialNo">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType/materialNo">
                 <Annotation Term="Common.Text" Path="materialTxt">
                     <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/plant">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType/plant">
                 <Annotation Term="Common.Text" Path="plantTxt">
                     <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType/recipientCountry">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType/recipientCountry">
                 <Annotation Term="Common.Text" Path="recipientCountryTxt">
                     <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_itemsType">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType">
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
@@ -105,32 +119,41 @@
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType/eventCountryTxt">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/allowReservation_ac">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType/reservationStatusTxt">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/Delete_mc">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType/eventCountry">
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/Update_mc">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/eventCountry">
                 <Annotation Term="Common.Text" Path="eventCountryTxt">
                     <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_reservationsType">
-                <Annotation Term="UI.Identification">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="dg"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="eventOrganizer"/>
-                        </Record>
-                    </Collection>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/reservationStatus">
+                <Annotation Term="Common.Text" Path="reservationStatusTxt">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
                 </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType">
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="reservationNo"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reservationIcon"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reservationStatus"/>
+                            <Annotation Term="HTML5.CssDefaults">
+                                <Record>
+                                    <PropertyValue Property="width" String="10rem"/>
+                                </Record>
+                            </Annotation>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="dg"/>
@@ -178,27 +201,7 @@
                         <PropertyPath>eventOrganizer</PropertyPath>
                         <PropertyPath>eventDate</PropertyPath>
                         <PropertyPath>eventName</PropertyPath>
-                    </Collection>
-                </Annotation>
-            </Annotations>
-            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType">
-                <Annotation Term="UI.Identification">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="eventOrganizer"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.LineItem">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="eventOrganizer"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>eventOrganizer</PropertyPath>
+                        <PropertyPath>eventCountry</PropertyPath>
                     </Collection>
                 </Annotation>
             </Annotations>

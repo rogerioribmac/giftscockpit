@@ -45,6 +45,15 @@
     <edmx:DataServices>
         <Schema Namespace="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001" Alias="SAP__self">
             <Annotation Term="SAP__core.SchemaVersion" String="1.0.0"/>
+            <EntityType Name="zz_pv_gifts_ckpt_statusType">
+                <Key>
+                    <PropertyRef Name="reservationStatus"/>
+                </Key>
+                <Property Name="reservationStatus" Type="Edm.String" Nullable="false" MaxLength="1"/>
+                <Property Name="sequence" Type="Edm.Byte" Nullable="false"/>
+                <Property Name="icon" Type="Edm.String" Nullable="false" MaxLength="50"/>
+                <Property Name="description" Type="Edm.String" Nullable="false" MaxLength="50"/>
+            </EntityType>
             <EntityType Name="zz_pv_gifts_ckpt_reservationsType">
                 <Key>
                     <PropertyRef Name="reservationNo"/>
@@ -61,6 +70,7 @@
                 <Property Name="eventCountryTxt" Type="Edm.String" Nullable="false" MaxLength="15"/>
                 <Property Name="reservationStatus" Type="Edm.String" Nullable="false" MaxLength="1"/>
                 <Property Name="reservationStatusTxt" Type="Edm.String" Nullable="false" MaxLength="60"/>
+                <Property Name="reservationIcon" Type="Edm.String" Nullable="false" MaxLength="50"/>
                 <Property Name="pickupDate" Type="Edm.Date"/>
                 <Property Name="pickupTime" Type="Edm.TimeOfDay" Nullable="false"/>
                 <Property Name="pickupDuration" Type="Edm.String" Nullable="false" MaxLength="2"/>
@@ -68,22 +78,14 @@
                 <Property Name="protocolResponsible" Type="Edm.String" Nullable="false" MaxLength="12"/>
                 <Property Name="missionCancDate" Type="Edm.Date"/>
                 <Property Name="requestor" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="commentObj" Type="Edm.String" Nullable="false" MaxLength="200"/>
+                <Property Name="instid_a" Type="Edm.String" Nullable="false" MaxLength="70"/>
                 <Property Name="__EntityControl" Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.EntityControl"/>
                 <Property Name="__OperationControl" Type="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsOperationControl"/>
                 <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.SAP__Message)" Nullable="false"/>
                 <NavigationProperty Name="_items" Type="Collection(com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_itemsType)" Partner="_reservation">
                     <OnDelete Action="Cascade"/>
                 </NavigationProperty>
-            </EntityType>
-            <EntityType Name="zz_pv_gifts_ckpt_status_countType">
-                <Key>
-                    <PropertyRef Name="reservationStatus"/>
-                </Key>
-                <Property Name="reservationStatus" Type="Edm.String" Nullable="false" MaxLength="1"/>
-                <Property Name="sequence" Type="Edm.Byte" Nullable="false"/>
-                <Property Name="icon" Type="Edm.String" Nullable="false" MaxLength="50"/>
-                <Property Name="description" Type="Edm.String" Nullable="false" MaxLength="50"/>
-                <Property Name="totalRows" Type="Edm.Int32" Nullable="false"/>
             </EntityType>
             <EntityType Name="zz_pv_gifts_ckpt_itemsType">
                 <Key>
@@ -144,8 +146,41 @@
                 <EntitySet Name="zz_pv_gifts_ckpt_reservations" EntityType="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_reservationsType">
                     <NavigationPropertyBinding Path="_items" Target="zz_pv_gifts_ckpt_items"/>
                 </EntitySet>
-                <EntitySet Name="zz_pv_gifts_ckpt_status_count" EntityType="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_status_countType"/>
+                <EntitySet Name="zz_pv_gifts_ckpt_status" EntityType="com.sap.gateway.srvd.zz_sd_gifts_cockpit.v0001.zz_pv_gifts_ckpt_statusType"/>
             </EntityContainer>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_statusType">
+                <Annotation Term="SAP__common.Label" String="PV - Status Counter last year"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/zz_pv_gifts_ckpt_status">
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection/>
+                </Annotation>
+            </Annotations>
             <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/reservationNo">
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsDigitSequence"/>
@@ -228,6 +263,15 @@
                 </Annotation>
                 <Annotation Term="SAP__capabilities.FilterRestrictions">
                     <Record>
+                        <PropertyValue Property="Filterable" Bool="true"/>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="eventDate"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SingleRange"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
                         <PropertyValue Property="NonFilterableProperties">
                             <Collection>
                                 <PropertyPath>__EntityControl</PropertyPath>
@@ -295,6 +339,9 @@
                             <PropertyValue Property="Value" Path="reservationNo"/>
                         </Record>
                         <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Value" Path="reservationIcon"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
                             <PropertyValue Property="Value" Path="reservationStatus"/>
                             <Annotation Term="SAP__HTML5.CssDefaults">
                                 <Record>
@@ -352,39 +399,6 @@
                     </Collection>
                 </Annotation>
                 <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
-            </Annotations>
-            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType">
-                <Annotation Term="SAP__common.Label" String="PV - Status Counter last year"/>
-            </Annotations>
-            <Annotations Target="SAP__self.Container/zz_pv_gifts_ckpt_status_count">
-                <Annotation Term="SAP__capabilities.SearchRestrictions">
-                    <Record>
-                        <PropertyValue Property="Searchable" Bool="false"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="SAP__capabilities.InsertRestrictions">
-                    <Record>
-                        <PropertyValue Property="Insertable" Bool="false"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="SAP__capabilities.DeleteRestrictions">
-                    <Record>
-                        <PropertyValue Property="Deletable" Bool="false"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="SAP__capabilities.UpdateRestrictions">
-                    <Record>
-                        <PropertyValue Property="Updatable" Bool="false"/>
-                        <PropertyValue Property="QueryOptions">
-                            <Record>
-                                <PropertyValue Property="SelectSupported" Bool="true"/>
-                            </Record>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="SAP__core.OptimisticConcurrency">
-                    <Collection/>
-                </Annotation>
             </Annotations>
             <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/reservationNo">
                 <Annotation Term="SAP__common.IsDigitSequence"/>
@@ -665,6 +679,18 @@
                 <Annotation Term="SAP__common.Heading" String="Country/Reg. Name"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Name of Country/Region (Short)"/>
             </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_statusType/reservationStatus">
+                <Annotation Term="SAP__common.Label" String="Reservation status"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_statusType/sequence">
+                <Annotation Term="SAP__common.Label" String="SAPUI5 Sequence"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_statusType/icon">
+                <Annotation Term="SAP__common.Label" String="SAPUI5 Icon"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_statusType/description">
+                <Annotation Term="SAP__common.Label" String="Status description"/>
+            </Annotations>
             <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/service">
                 <Annotation Term="SAP__common.Label" String="Service of ct.pers"/>
                 <Annotation Term="SAP__common.Heading" String="Service of Contact Person"/>
@@ -681,6 +707,9 @@
             </Annotations>
             <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/needByDate">
                 <Annotation Term="SAP__common.Label" String="Need-by Date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/reservationIcon">
+                <Annotation Term="SAP__common.Label" String="SAPUI5 Icon"/>
             </Annotations>
             <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/pickupDate">
                 <Annotation Term="SAP__common.Label" String="Pickup date"/>
@@ -699,17 +728,9 @@
                 <Annotation Term="SAP__common.Heading" String="Mission cancelled date"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Mission cancelled date"/>
             </Annotations>
-            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/reservationStatus">
-                <Annotation Term="SAP__common.Label" String="Reservation status"/>
-            </Annotations>
-            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/sequence">
-                <Annotation Term="SAP__common.Label" String="SAPUI5 Sequence"/>
-            </Annotations>
-            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/icon">
-                <Annotation Term="SAP__common.Label" String="SAPUI5 Icon"/>
-            </Annotations>
-            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_status_countType/description">
-                <Annotation Term="SAP__common.Label" String="Status description"/>
+            <Annotations Target="SAP__self.zz_pv_gifts_ckpt_reservationsType/instid_a">
+                <Annotation Term="SAP__common.Label" String="Instance ID"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Instance Ident. in BOR Compat. Persistent Object References"/>
             </Annotations>
             <Annotations Target="SAP__self.zz_pv_gifts_ckpt_itemsType/function">
                 <Annotation Term="SAP__common.Label" String="Function"/>
