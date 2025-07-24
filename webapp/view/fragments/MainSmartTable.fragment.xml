@@ -20,8 +20,25 @@
         enableAutoColumnWidth="true"
         app:useSmartToggle="true" >
         <Table mode="MultiSelect">
+            <columns>
+                <Column width="50px" hAlign="Begin">
+                    <customData>
+                        <core:CustomData key="p13nData" value='{"columnKey": "reservationIcon", "leadingProperty": "reservationIcon", "columnIndex": 1 }' />
+                    </customData>
+                    <Text text="{i18n>Main.ID}"/>
+                </Column>       
+            </columns>
             <items>
-                <ColumnListItem type="Navigation" press="onItemPress" />
+                <ColumnListItem type="Navigation" press="onItemPress">
+                    <cells>
+                        <VBox justifyContent="Center" alignItems="Center">
+                            <core:Icon
+                                src="{reservationIcon}"
+                                color="Default"
+                                decorative="false" />
+                        </VBox>
+                    </cells>
+            </ColumnListItem>
             </items>
         </Table>
     </smartTable:SmartTable>
