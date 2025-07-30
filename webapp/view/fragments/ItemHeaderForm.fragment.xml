@@ -37,6 +37,9 @@
         <Text text="{requestor}" />
 
         <Label text="{i18n>Item.Comment}" />
+        <Text text="{commentObj}" />
+
+        <Label text="{i18n>Item.PickupComment}" />
         <Text text="{pickupComment}" />
 
     </f:SimpleForm>  

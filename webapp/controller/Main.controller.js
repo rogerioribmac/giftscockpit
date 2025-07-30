@@ -272,6 +272,89 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             });
         },
 
+        onRejectReservation: function(oEvent){
+
+            var oModel = this.getView().getModel();
+            var oSmartTable = this.getView()?.byId("idSmartTable");
+            var oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oBundle = this.getView().getModel("i18n").getResourceBundle();
+            
+            if (oSelected.length == 0){
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineReject");
+                MessageToast.show(sMessage);
+            } else if (oSelected.length > 1){
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineReject");
+                MessageToast.show(sMessage);
+            } else {
+
+                this._openDialogReject(oSelected);
+
+            }
+
+        },
+
+        onRejectYes: function(oEvent){
+
+            var oModel = this.getView().getModel();
+            var oDialog = this.byId("idRejectDialog");
+            var oContext = oDialog.getBindingContext();
+            const sReservationNo = oContext.getProperty("reservationNo");
+            var oTextArea = this.byId("idRejectTextArea");
+            const sReason = oTextArea.getValue();
+            const oBundle = this.getView().getModel("i18n").getResourceBundle();
+
+            oModel.callFunction("/rejectReservation", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: sReservationNo,
+                    Reason: sReason
+                },
+                success: function(oData, oResponse) {
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oBundle.getText("Main.RejectErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                        this._recalculateIconTabBarCount();
+                        this._pRejectDialog.then(oDialog => oDialog.close());
+                    }
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+
+                    var oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Main.RejectErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oBundle.getText("Main.RejectErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                        this._pRejectDialog.then(oDialog => oDialog.close());
+                    }
+                    
+                }.bind(this)
+            });
+
+        },
+
+        onRejectNo: function(oEvent){
+            this._pRejectDialog.then((oDialog) => {
+                oDialog.close();
+            });
+        },
+
         _checkCloseDialog: function(oPromise){
 
             const oModel = this.getView().getModel();
@@ -393,6 +476,42 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        _openDialogReject: function(oSelected){
+
+            const oContext = oSelected[0].getBindingContext();
+            const oView = this.getView(); 
+            const sStatus = oContext.getProperty("reservationStatus"); 
+
+            if (sStatus == '2' || sStatus == '3' || sStatus == '5' || sStatus == '6'){
+
+                if (!this._pRejectDialog) {
+
+                    this._pRejectDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "com.ep.zgiftscockpit.view.fragments.MainRejectDialog",
+                        controller: this
+                    }).then((oDialog) => {
+                        oView.addDependent(oDialog);
+                        oDialog.setBindingContext(oContext);
+                        oDialog.open();
+                        return oDialog;
+                    });
+
+                } else {
+                    this._pRejectDialog.then((oDialog) => {
+                        oDialog.setBindingContext(oContext);
+                        this.byId("idRejectTextArea")?.setValue();
+                        oDialog.open();
+                    });
+                }
+            } else {
+                const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                const sMessage = oBundle.getText("Main.ErrorMsgRejectStatus");
+                MessageToast.show(sMessage);
+            }
+
+        },
+
         _filterSmartTable: function(sKey){
 
             var oSmartTable = this.byId("idSmartTable");
@@ -442,9 +561,13 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             if (sKey == '3' || sKey == 'A'){
                 this.byId("idMainApproveBtn")?.setEnabled(true);
-                this.byId("idMainRejectBtn")?.setEnabled(true);
             } else {
                 this.byId("idMainApproveBtn")?.setEnabled(false);
+            }
+
+            if (sKey == '2' || sKey == '3' || sKey == '5' || sKey == '6' || sKey == 'A'){
+                this.byId("idMainRejectBtn")?.setEnabled(true);
+            } else {
                 this.byId("idMainRejectBtn")?.setEnabled(false);
             }
 
