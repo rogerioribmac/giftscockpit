@@ -13,7 +13,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
         
         onInit: function(oEvent){
 
-            var oSmartTable = this.byId("idSmartTable");
+            const oSmartTable = this.byId("idSmartTable");
             oSmartTable.applyVariant({
                 sort: {
                     sortItems: [{ 
@@ -28,7 +28,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             oSmartTable.getTable().setGrowingScrollToLoad(true);
             oSmartTable.getTable().setGrowingThreshold(100);
 
-            var oSmartFilterBar = this.byId("smartFilterBar");
+            const oSmartFilterBar = this.byId("smartFilterBar");
             oSmartFilterBar.attachSearch(this._recalculateIconTabBarCount, this);
 
             this._setInitialFilter();
@@ -37,9 +37,9 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onItemPress: function(oEvent){
 
-            var sReservationNo = oEvent?.getSource()?.getBindingContext()?.getProperty("reservationNo");
+            let sReservationNo = oEvent?.getSource()?.getBindingContext()?.getProperty("reservationNo");
 
-            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("RouteItem", {
                 reservationNo: sReservationNo
             });
@@ -48,21 +48,21 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onAfterRendering: function(oEvent){
 
-            var oIconTabBar = this.byId("iconTabBar");
+            const oIconTabBar = this.byId("iconTabBar");
             if (oIconTabBar){
                 oIconTabBar.getBinding("items").attachEventOnce("change", function(){
 
-                    var oIconTabBar = this.byId("iconTabBar");
+                    const oIconTabBar = this.byId("iconTabBar");
                     if (oIconTabBar){
-                        var oItems = oIconTabBar.getItems();
+                        const oItems = oIconTabBar.getItems();
                         if (oItems && oItems.length > 0){
 
-                            var oFirstItem = oItems[0];
-                            var sFirstKey = oFirstItem.getKey();
+                            const oFirstItem = oItems[0];
+                            const sFirstKey = oFirstItem.getKey();
                             oIconTabBar.setSelectedKey(sFirstKey);
 
-                            var oSmartTable = this.byId("idSmartTable");
-                            var oTable = oSmartTable.getTable();
+                            const oSmartTable = this.byId("idSmartTable");
+                            const oTable = oSmartTable.getTable();
                             if (oTable) {
                                 oSmartTable.setBusy(true);
                                 oTable.attachEventOnce("updateFinished", function () {
@@ -84,7 +84,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onIconTabBarSelect: function(oEvent) {
 
-            var sSelectedKey = oEvent.getParameter("selectedKey");
+            const sSelectedKey = oEvent.getParameter("selectedKey");
             this._filterSmartTable(sSelectedKey);
             this._enableFooterButtons(sSelectedKey);
 
@@ -92,8 +92,8 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onModifyHeader: function(oEvent){
 
-            var oSmartTable = this.getView()?.byId("idSmartTable");
-            var oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oSmartTable = this.getView()?.byId("idSmartTable");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
 
             if (oSelected.length) {
 
@@ -115,36 +115,46 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         OnDialogModHeaderMoveRight: function(oEvent){
 
-            if (this._iCurrentIndex < this._aSelectedItems.length - 1) {
+            this._checkPendingChangesModifyHeader(() => {
 
-                this._iCurrentIndex++;
-                const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
-                this._pHeaderDialog.then(oDialog => {
-                    oDialog.setBindingContext(oContext);
-                });
+                if (this._iCurrentIndex < this._aSelectedItems.length - 1) {
 
-                this.getView()?.byId("idDialogModHeadLeft")?.setEnabled(true);
-            } 
-            
-            this.OnDialogModHeaderArrowsVisibility();
+                    this._iCurrentIndex++;
+                    const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                    this._pHeaderDialog.then(oDialog => {
+                        oDialog.setBindingContext(oContext);
+                    });
+    
+                    this.getView()?.byId("idDialogModHeadLeft")?.setEnabled(true);
+                } 
+                
+                this.OnDialogModHeaderArrowsVisibility();
+                
+            });
 
         },
 
         OnDialogModHeaderMoveLeft: function(oEvent) {
 
-            if (this._iCurrentIndex > 0) {
+            this._checkPendingChangesModifyHeader(() => {
 
-                this._iCurrentIndex--;
-                const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
-                this._pHeaderDialog.then(oDialog => {
-                    oDialog.setBindingContext(oContext);
-                });
-        
-                this.getView()?.byId("idDialogModHeadRight")?.setEnabled(true);
+                if (this._iCurrentIndex > 0) {
 
-            }
-        
-            this.OnDialogModHeaderArrowsVisibility();
+                    this._iCurrentIndex--;
+                    const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                    this._pHeaderDialog.then(oDialog => {
+                        oDialog.setBindingContext(oContext);
+                    });
+            
+                    this.getView()?.byId("idDialogModHeadRight")?.setEnabled(true);
+    
+                }
+            
+                this.OnDialogModHeaderArrowsVisibility();
+
+            });
+
+            
 
         },
 
@@ -164,26 +174,19 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
-        onSaveDialogPress: function(oEvent){
+        onSaveModifyHeader: function(oEvent){         
 
-            const oModel = this.getView().getModel(); 
-            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            this._checkPendingChangesModifyHeader(() => {
 
-            oModel.submitChanges({
-                success: function (oSuccess) {
-                    MessageToast.show(oResourceBundle.getText("Main.ChangesSaved"));
-                    this._pHeaderDialog.then(function (oDialog) {
-                        oDialog.close();
-                    });
-                }.bind(this),
-                error: function (oError) {
-                    MessageToast.show(oResourceBundle.getText("Main.SaveError"));
-                }.bind(this)
+                this._pHeaderDialog.then(function (oDialog) {
+                    oDialog.close();
+                });
+                
             });
 
         },
 
-        onCancelDialogPress: function(oEvent){
+        onCancelModifyHeader: function(oEvent){
 
             this._checkCloseDialog();
 
@@ -191,9 +194,9 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onAllowReservation: function(oEvent){
 
-            var oModel = this.getView().getModel();
-            var oSmartTable = this.getView()?.byId("idSmartTable");
-            var oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oModel = this.getView().getModel();
+            const oSmartTable = this.getView()?.byId("idSmartTable");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
             const oBundle = this.getView().getModel("i18n").getResourceBundle();
             
             if (oSelected.length == 0){
@@ -212,11 +215,11 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onAcceptYes: function(oEvent){
 
-            var oModel = this.getView().getModel();
-            var oDialog = this.byId("idAcceptDialog");
-            var oContext = oDialog.getBindingContext();
+            const oModel = this.getView().getModel();
+            const oDialog = this.byId("idAcceptDialog");
+            const oContext = oDialog.getBindingContext();
             const sReservationNo = oContext.getProperty("reservationNo");
-            var oTextArea = this.byId("idAcceptTextArea");
+            const oTextArea = this.byId("idAcceptTextArea");
             const sReason = oTextArea.getValue();
             const oBundle = this.getView().getModel("i18n").getResourceBundle();
 
@@ -244,7 +247,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 }.bind(this),
                 error: function(oError, oResponse) {
 
-                    var oResponseJSON = JSON.parse(oError.responseText);
+                    const oResponseJSON = JSON.parse(oError.responseText);
                     try {
                         const sMessage = oResponseJSON?.error?.message?.value;
                     
@@ -274,9 +277,9 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onRejectReservation: function(oEvent){
 
-            var oModel = this.getView().getModel();
-            var oSmartTable = this.getView()?.byId("idSmartTable");
-            var oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oModel = this.getView().getModel();
+            const oSmartTable = this.getView()?.byId("idSmartTable");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
             const oBundle = this.getView().getModel("i18n").getResourceBundle();
             
             if (oSelected.length == 0){
@@ -295,11 +298,11 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         onRejectYes: function(oEvent){
 
-            var oModel = this.getView().getModel();
-            var oDialog = this.byId("idRejectDialog");
-            var oContext = oDialog.getBindingContext();
+            const oModel = this.getView().getModel();
+            const oDialog = this.byId("idRejectDialog");
+            const oContext = oDialog.getBindingContext();
             const sReservationNo = oContext.getProperty("reservationNo");
-            var oTextArea = this.byId("idRejectTextArea");
+            const oTextArea = this.byId("idRejectTextArea");
             const sReason = oTextArea.getValue();
             const oBundle = this.getView().getModel("i18n").getResourceBundle();
 
@@ -327,7 +330,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 }.bind(this),
                 error: function(oError, oResponse) {
 
-                    var oResponseJSON = JSON.parse(oError.responseText);
+                    const oResponseJSON = JSON.parse(oError.responseText);
                     try {
                         const sMessage = oResponseJSON?.error?.message?.value;
                     
@@ -353,6 +356,96 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             this._pRejectDialog.then((oDialog) => {
                 oDialog.close();
             });
+        },
+
+        onModifyDialogYes: function(oEvent){
+
+            const oModel = this.getView().getModel();
+            const oDialog = this.byId("idModifyHeaderFragment");
+            const oContext = oDialog?.getBindingContext();
+            const oRadioButton = this.byId("idModifyDialogRadioButton");
+            const sPropertyPath = oContext?.getPath() + "/reservationStatus";
+
+            if (oRadioButton?.getSelectedButton()?.getId().includes("idMainModifyHeaderRB1")) {
+                oModel?.setProperty(sPropertyPath, "1");
+            } else if (oRadioButton?.getSelectedButton()?.getId().includes("idMainModifyHeaderRB3")) {
+                oModel?.setProperty(sPropertyPath, "3");
+            } else if (oRadioButton?.getSelectedButton()?.getId().includes("idMainModifyHeaderRB5")) {
+                oModel?.setProperty(sPropertyPath, "5");
+            }
+
+            this._submitChangesModifyHeader();
+
+            this._pModifyStatusDialog.then(function (oDialog) {
+                oDialog.close();
+            });
+
+        },
+
+        onModifyDialogNo: function(oEvent){
+            this._pModifyStatusDialog.then((oDialog) => {
+                oDialog.close();
+            });
+        },
+
+        onMainClearSelection: function(oEvent){
+            
+            const oSmartTable = this.byId("idSmartTable");
+            const oInnerTable = oSmartTable?.getTable();
+
+            if (oInnerTable instanceof sap.m.Table) {
+                const aItems = oInnerTable.getItems();
+                aItems.forEach(function (oItem) {
+                    oItem.setSelected(false); // desseleciona
+                });
+            } else if (oInnerTable instanceof sap.ui.table.Table) {
+                oInnerTable.clearSelection(); // limpa todas as seleções
+            }
+
+        },
+
+        _checkPendingChangesModifyHeader: function(fnAfterSaveModifyHeader){
+
+            const oModel = this.getView().getModel(); 
+            const oPendingChanges = oModel?.getPendingChanges();
+
+            if (Object.keys(oPendingChanges).length > 0) {
+
+                const oDialog = this.byId("idModifyHeaderFragment"); 
+                const oContext = oDialog?.getBindingContext();
+                const sStatus = oContext?.getProperty("reservationStatus"); 
+    
+                if (sStatus !== '4' || sStatus !== '5' || sStatus !== '7'){
+                    this._openDialogModifyStatus(fnAfterSaveModifyHeader);
+                } else {
+                    this._submitChangesModifyHeader();
+                }
+                
+            } else {
+                fnAfterSaveModifyHeader();
+            }
+
+        },
+
+        _submitChangesModifyHeader: function(){
+
+            const oModel = this.getView()?.getModel(); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+
+            oModel.submitChanges({
+                success: function (oSuccess) {
+                    MessageToast.show(oResourceBundle.getText("Main.ChangesSaved"));
+                    if (typeof this._fnAfterSaveModifyHeader === "function") {
+                        this._fnAfterSaveModifyHeader();
+                        this._fnAfterSaveModifyHeader = null;
+                    }
+                    this._recalculateIconTabBarCount();
+                }.bind(this),
+                error: function (oError) {
+                    MessageToast.show(oResourceBundle.getText("Main.SaveError"));
+                }.bind(this)
+            });
+
         },
 
         _checkCloseDialog: function(oPromise){
@@ -406,7 +499,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 this._checkCloseDialog(oPromise);
             });
         },
-
+     
         _openDialogModifyHeader: function(oSelected){
 
             this._aSelectedItems = oSelected; 
@@ -476,6 +569,46 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        _openDialogModifyStatus: function(fnAfterSaveModifyHeader){
+
+            const oView = this.getView();
+
+            if (!this._pModifyStatusDialog) {
+                this._pModifyStatusDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "com.ep.zgiftscockpit.view.fragments.MainModifyHeaderDialog",
+                    controller: this
+                }).then((oDialog) => {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            } 
+
+            this._pModifyStatusDialog.then((oDialog) => {
+                this._setCurrentStatusRadioButton();
+                this._fnAfterSaveModifyHeader = fnAfterSaveModifyHeader;
+                oDialog.open();
+            });
+
+        },
+
+        _setCurrentStatusRadioButton: function(){
+
+            const oRadioButton = this.byId("idModifyDialogRadioButton");
+            const oDialog = this.byId("idModifyHeaderFragment");
+            const oContext = oDialog?.getBindingContext();
+            const sStatus = oContext?.getProperty("reservationStatus");
+
+            if (sStatus == "1"){
+                oRadioButton.setSelectedButton(this.byId("idMainModifyHeaderRB1"))
+            } else if (sStatus == "3"){
+                oRadioButton.setSelectedButton(this.byId("idMainModifyHeaderRB3"))
+            } else if (sStatus == "5"){
+                oRadioButton.setSelectedButton(this.byId("idMainModifyHeaderRB5"))
+            }
+
+        },
+
         _openDialogReject: function(oSelected){
 
             const oContext = oSelected[0].getBindingContext();
@@ -514,33 +647,33 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         _filterSmartTable: function(sKey){
 
-            var oSmartTable = this.byId("idSmartTable");
-            var aFilters = [];
+            const oSmartTable = this.byId("idSmartTable");
+            let aFilters = [];
 
             if (sKey && sKey != "A") { 
                 aFilters.push(new Filter("reservationStatus", FilterOperator.EQ, sKey));
             }
 
-            var oTable = oSmartTable.getTable();
+            const oTable = oSmartTable.getTable();
             oTable.getBinding("items").filter(aFilters);
 
         },
 
         _recalculateIconTabBarCount: function(){
 
-            var oIconTabBar = this.byId("iconTabBar");
-            var oItems = oIconTabBar.getItems();
-            var aFilters = this.byId("smartFilterBar")?.getFilters();
+            const oIconTabBar = this.byId("iconTabBar");
+            const oItems = oIconTabBar.getItems();
+            let aFilters = this.byId("smartFilterBar")?.getFilters();
             oItems.forEach((oItem) => {
 
-                var sStatus = oItem.getKey();
-                var sPath = "/zz_pv_gifts_ckpt_reservations/$count";
-                var aAllFilters = aFilters.slice();
+                const sStatus = oItem.getKey();
+                const sPath = "/zz_pv_gifts_ckpt_reservations/$count";
+                let aAllFilters = aFilters.slice();
                 if (sStatus !== 'A') { 
                     aAllFilters.push(new Filter("reservationStatus", FilterOperator.EQ, sStatus));
                 }
 
-                var mParameters = {
+                const mParameters = {
                     filters: aAllFilters,
                     success: function (sCount) {
                         oItem.setCount(sCount);
@@ -550,7 +683,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                     }
                 };
 
-                var oModel = this.getView().getModel();
+                const oModel = this.getView().getModel();
                 oModel.read(sPath, mParameters);
 
             });
@@ -575,7 +708,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         _setInitialFilter: function(){
 
-            var oSmartFilterBar = this.byId("smartFilterBar");
+            const oSmartFilterBar = this.byId("smartFilterBar");
 
             oSmartFilterBar?.attachInitialise(() => {
 

@@ -1,1 +1,4 @@
-/* Enter your custom styles here */
+.highlightStatus .sapMObjStatusText {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

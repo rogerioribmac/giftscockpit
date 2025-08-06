@@ -7,6 +7,7 @@
     <smartTable:SmartTable
         id="idSmartTable"
         entitySet="zz_pv_gifts_ckpt_reservations"
+        requestAtLeastFields="reservationCrit"
         smartFilterId="smartFilterBar"
         tableType="ResponsiveTable"
         showDetailsButton="true"
@@ -29,7 +30,7 @@
                 </Column>       
             </columns>
             <items>
-                <ColumnListItem type="Navigation" press="onItemPress">
+                <ColumnListItem type="Navigation" press="onItemPress" highlight="{reservationCrit}">
                     <cells>
                         <VBox justifyContent="Center" alignItems="Center">
                             <core:Icon
@@ -38,9 +39,15 @@
                                 decorative="false" />
                         </VBox>
                     </cells>
-            </ColumnListItem>
+                </ColumnListItem>
             </items>
         </Table>
+        <smartTable:customToolbar>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button icon="sap-icon://multi-select" text="{i18n>Main.DeselectAll}" press="onMainClearSelection" />
+            </OverflowToolbar>
+        </smartTable:customToolbar>
     </smartTable:SmartTable>
 
 </core:FragmentDefinition>

@@ -21,7 +21,7 @@
         app:useSmartToggle="true" >
         <Table mode="MultiSelect">
             <items>
-                <ColumnListItem type="Navigation" press="onItemPress" />
+                <ColumnListItem type="Navigation" press="onItemPress" highlight="{ItemCrit}"/>
             </items>
         </Table>
     </smartTable:SmartTable>  

@@ -37,7 +37,6 @@ function (Controller) {
                       oRouter.navTo("RouteNotFound");
                     } else {
                       var oSmartTable = oView.byId("idSmartTableItems");
-                      debugger;
                     }
                     
                   }.bind(this)

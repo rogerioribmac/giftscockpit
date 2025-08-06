@@ -18,12 +18,11 @@
                     </uxap:expandedHeading>
 
                     <uxap:expandedContent>
-						<Text text="{reservationStatusTxt}"/>
+                        <ObjectStatus
+                            text="{reservationStatusTxt}"
+                            state="{reservationCrit}"
+                            class="highlightStatus"/>
 					</uxap:expandedContent>
-
-                    <uxap:snappedContent>
-						<Text text="{reservationStatusTxt}"/>
-					</uxap:snappedContent>
 
                     <uxap:snappedHeading>
 						<FlexBox fitContainer="true" alignItems="Center">

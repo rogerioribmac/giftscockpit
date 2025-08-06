@@ -42,6 +42,10 @@ server:
             metadataPath: ./webapp/localService/mainService/metadata.xml
             mockdataPath: ./webapp/localService/mainService/data
             generateMockData: true
+          - urlPath: /sap/opu/odata4/sap/zz_sb_gifts_cockpit_v4/srvd/sap/zz_sd_gifts_cockpit/0001
+            metadataPath: ./webapp/localService/v4Service/metadata.xml
+            mockdataPath: ./webapp/localService/v4Service/data
+            generateMockData: true
         annotations:
           - localPath: ./webapp/localService/mainService/ZZ_SB_GIFTS_COCKPIT_V2_VAN.xml
             urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZZ_SB_GIFTS_COCKPIT_V2_VAN',Version='0001')/$value/

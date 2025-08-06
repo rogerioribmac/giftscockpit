@@ -8,7 +8,7 @@
     xmlns:layout="sap.ui.layout">
     
     <Dialog
-        id="itemDetailsDialog"
+        id="idModifyHeaderFragment"
         title="{i18n>Main.ModifyHeader}"
         contentWidth="60%"
         draggable="true"
@@ -64,8 +64,8 @@
         <buttons>
             <Button icon="sap-icon://navigation-left-arrow" press="OnDialogModHeaderMoveLeft" id="idDialogModHeadLeft"/>
             <Button icon="sap-icon://navigation-right-arrow" press="OnDialogModHeaderMoveRight" id="idDialogModHeadRight"/>
-            <Button text="Save" type="Emphasized" press="onSaveDialogPress"/>
-            <Button text="Cancel" press="onCancelDialogPress"/>
+            <Button text="Save" type="Emphasized" press="onSaveModifyHeader"/>
+            <Button text="Cancel" press="onCancelModifyHeader"/>
         </buttons>
 
     </Dialog>

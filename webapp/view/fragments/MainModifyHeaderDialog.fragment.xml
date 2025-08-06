@@ -1,0 +1,53 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartForm="sap.ui.comp.smartform"
+    xmlns:smartField="sap.ui.comp.smartfield"
+    xmlns:mvc="sap.ui.core.mvc">
+
+    <Dialog
+        id="idModifyHeaderDialog"
+        title="{i18n>Main.ConfirmationTitle}"
+        type="Message">
+
+        <content>
+            <smartForm:SmartForm 
+            id="idSmartFormModify"
+            editTogglable="false" 
+            title="{i18n>Main.QuestionModify}"
+            editable="false"
+            flexEnabled="false">
+                <smartForm:Group>
+                    <smartForm:GroupElement>
+                        <Text text="{i18n>Main.ChooseStatusModify}" />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement>
+                        <RadioButtonGroup
+                            id="idModifyDialogRadioButton"
+                            columns="1">
+                            <buttons>
+                                <RadioButton text="Under Review" id="idMainModifyHeaderRB1" />
+                                <RadioButton text="New" id="idMainModifyHeaderRB3" />
+                                <RadioButton text="Accepted nfd" id="idMainModifyHeaderRB5" />
+                            </buttons>
+                        </RadioButtonGroup>
+                    </smartForm:GroupElement>
+                </smartForm:Group>
+            </smartForm:SmartForm>
+        </content>
+
+        <beginButton>
+            <Button
+                type="Emphasized"
+                text="{i18n>Main.Yes}"
+                press=".onModifyDialogYes" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                text="{i18n>Main.No}"
+                press=".onModifyDialogNo" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>
