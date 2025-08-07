@@ -154,8 +154,6 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             });
 
-            
-
         },
 
         OnDialogModHeaderArrowsVisibility: function(){
@@ -431,18 +429,63 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             const oModel = this.getView()?.getModel(); 
             const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const oDialog = this.byId("idModifyHeaderFragment");
+            const oContext = oDialog.getBindingContext();
+            const oData = oContext?.getObject();
 
-            oModel.submitChanges({
-                success: function (oSuccess) {
-                    MessageToast.show(oResourceBundle.getText("Main.ChangesSaved"));
-                    if (typeof this._fnAfterSaveModifyHeader === "function") {
-                        this._fnAfterSaveModifyHeader();
-                        this._fnAfterSaveModifyHeader = null;
+            oModel.callFunction("/modifyHeader", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: oData.reservationNo,
+                    reservationStatus: oData.reservationStatus,
+                    dg: oData.dg,
+                    eventOrganizer: oData.eventOrganizer,
+                    contactPerson: oData.contactPerson,
+                    service: oData.service,
+                    eventName: oData.eventName,
+                    eventCountry: oData.eventCountry,
+                    eventDate: oData.eventDate,
+                    needByDate: oData.needByDate,
+                    requestor: oData.requestor,
+                    pickupComment: oData.pickupComment
+                },
+                success: function(oData, oResponse) {
+debugger;
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oResourceBundle.getText("Main.ModifyHeaderErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                        this._recalculateIconTabBarCount();
+                        if (typeof this._fnAfterSaveModifyHeader === "function") {
+                            this._fnAfterSaveModifyHeader();
+                            this._fnAfterSaveModifyHeader = null;
+                        }
                     }
-                    this._recalculateIconTabBarCount();
+
                 }.bind(this),
-                error: function (oError) {
-                    MessageToast.show(oResourceBundle.getText("Main.SaveError"));
+                error: function(oError, oResponse) {
+
+                    const oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Main.ModifyHeaderErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oBundle.getText("Main.ModifyHeaderErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                    }
+                    
                 }.bind(this)
             });
 
