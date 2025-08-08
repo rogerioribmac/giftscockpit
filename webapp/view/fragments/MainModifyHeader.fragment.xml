@@ -10,7 +10,7 @@
     <Dialog
         id="idModifyHeaderFragment"
         title="{i18n>Main.ModifyHeader}"
-        contentWidth="60%"
+        contentWidth="40rem"
         draggable="true"
         resizable="true"
         class="sapUiContentPadding" >

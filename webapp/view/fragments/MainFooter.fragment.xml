@@ -7,7 +7,7 @@
         <Button text="{i18n>Main.Approve}" press="onAllowReservation" type="Accept" icon="sap-icon://accept" id="idMainApproveBtn"/>
         <Button text="{i18n>Main.Reject}" press="onRejectReservation" type="Reject" icon="sap-icon://decline" id="idMainRejectBtn" />
         <Button text="{i18n>Main.ModifyHeader}" press="onModifyHeader" icon="sap-icon://edit"/>
-        <Button text="{i18n>Main.Pickup}" press="onPickup" icon="sap-icon://enter-more"/>
+        <Button text="{i18n>Main.Pickup}" press="onPickupDialog" icon="sap-icon://enter-more" id="idMainPickBtn" />
         <Button text="{i18n>Main.SeePDF}" press="onSeePDF" icon="sap-icon://pdf-reader"/>
     </Toolbar>
 

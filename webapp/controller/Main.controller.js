@@ -107,6 +107,23 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        onPickupDialog: function(oEvent){
+
+            const oSmartTable = this.getView()?.byId("idSmartTable");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+
+            if (oSelected.length) {
+
+                this._openDialogPickup(oSelected);
+
+            } else {
+                const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLinePickup");
+                MessageToast.show(sMessage);
+            }
+
+        },
+
         formatDialogModifyHeaderTitle: function(sText, sReservationNo){
 
             return sText + " " + sReservationNo;
@@ -156,6 +173,49 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        OnDialogPickupMoveRight: function(oEvent){
+
+            this._checkPendingChangesPickupDialog(() => {
+
+                if (this._iCurrentIndex < this._aSelectedItems.length - 1) {
+
+                    this._iCurrentIndex++;
+                    const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                    this._pPickupDialog.then(oDialog => {
+                        oDialog.setBindingContext(oContext);
+                    });
+    
+                    this.getView()?.byId("idDialogPickupLeft")?.setEnabled(true);
+                } 
+                
+                this.OnDialogPickupArrowsVisibility();
+                
+            });
+
+        },
+
+        OnDialogPickupMoveLeft: function(oEvent) {
+
+            this._checkPendingChangesPickupDialog(() => {
+
+                if (this._iCurrentIndex > 0) {
+
+                    this._iCurrentIndex--;
+                    const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                    this._pPickupDialog.then(oDialog => {
+                        oDialog.setBindingContext(oContext);
+                    });
+            
+                    this.getView()?.byId("idDialogPickupRight")?.setEnabled(true);
+    
+                }
+            
+                this.OnDialogPickupArrowsVisibility();
+
+            });
+
+        },
+
         OnDialogModHeaderArrowsVisibility: function(){
 
             if (this._iCurrentIndex == 0) {
@@ -172,6 +232,22 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        OnDialogPickupArrowsVisibility: function(){
+
+            if (this._iCurrentIndex == 0) {
+                this.getView()?.byId("idDialogPickupLeft")?.setEnabled(false);
+            } else {
+                this.getView()?.byId("idDialogPickupLeft")?.setEnabled(true);
+            }
+
+            if (this._iCurrentIndex == this._aSelectedItems.length - 1) {
+                this.getView()?.byId("idDialogPickupRight")?.setEnabled(false);
+            } else {
+                this.getView()?.byId("idDialogPickupRight")?.setEnabled(true);
+            }
+
+        },
+
         onSaveModifyHeader: function(oEvent){         
 
             this._checkPendingChangesModifyHeader(() => {
@@ -184,9 +260,27 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        onSavePickupDialog: function(oEvent){         
+
+            this._checkPendingChangesPickupDialog(() => {
+
+                this._pPickupDialog.then(function (oDialog) {
+                    oDialog.close();
+                });
+                
+            });
+
+        },
+
         onCancelModifyHeader: function(oEvent){
 
-            this._checkCloseDialog();
+            this._checkCloseDialog(null, this._pHeaderDialog);
+
+        },
+
+        onCancelPickupDialog: function(oEvent){
+
+            this._checkCloseDialog(null, this._pPickupDialog);
 
         },
 
@@ -402,6 +496,22 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
         },
 
+        onPickupDurationChange: function(oEvent) {
+            
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+
+            if (this?._aDurations?.length) {
+                var sValue = oEvent.getParameter("value") || oEvent.getSource().getValue();
+                if (!this._aDurations.includes(sValue)) {
+                    oEvent.getSource().setValueState("Error");
+                    oEvent.getSource().setValueStateText(oResourceBundle.getText("Main.PickupDurationError")); 
+                } else {
+                    oEvent.getSource().setValueState("None");
+                }
+            }
+            
+        },
+
         _checkPendingChangesModifyHeader: function(fnAfterSaveModifyHeader){
 
             const oModel = this.getView().getModel(); 
@@ -413,14 +523,73 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 const oContext = oDialog?.getBindingContext();
                 const sStatus = oContext?.getProperty("reservationStatus"); 
     
-                if (sStatus !== '4' || sStatus !== '5' || sStatus !== '7'){
+                if (sStatus !== '4' && sStatus !== '5' && sStatus !== '7'){
                     this._openDialogModifyStatus(fnAfterSaveModifyHeader);
                 } else {
                     this._submitChangesModifyHeader();
+                    fnAfterSaveModifyHeader();
                 }
                 
             } else {
                 fnAfterSaveModifyHeader();
+            }
+
+        },
+
+        _checkPendingChangesPickupDialog: function(fnAfterSavePickupDialog){
+
+            const oModel = this.getView().getModel(); 
+            const oPendingChanges = oModel?.getPendingChanges();
+            const oPickupDuration = this.byId("idMainPickupDuration");
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+
+            if (oPickupDuration.getValueState() !== sap.ui.core.ValueState.Error){
+                if (this._checkPickMandatoryFields()){
+                    if (Object.keys(oPendingChanges).length > 0) {
+
+                        // const oDialog = this.byId("idPickupDialog"); 
+                        // const oContext = oDialog?.getBindingContext();
+                        // this._submitChangesPickupDialog(fnAfterSavePickupDialog);
+                        // fnAfterSavePickupDialog();
+
+                        MessageBox.confirm(
+                            oResourceBundle.getText("Main.ExitSaveChanges"), 
+                            {
+                                title: oResourceBundle.getText("Main.ConfirmationTitle"), 
+                                actions: [
+                                    oResourceBundle.getText("Main.Yes"),
+                                    oResourceBundle.getText("Main.No")                          ],
+                                emphasizedAction: oResourceBundle.getText("Main.No"),
+                                onClose: function (sAction) {
+                                    if (sAction === oResourceBundle.getText("Main.Yes")) {
+                                        this._submitChangesPickupDialog(fnAfterSavePickupDialog);
+                                    }
+                                }.bind(this)
+                            }
+                        );                        
+
+                    } else {
+                        fnAfterSavePickupDialog();
+                    }
+                } else {
+                    MessageBox.error(oResourceBundle.getText("Main.PickupMandatoryFieldsError"));
+                }
+            } else {
+                MessageBox.error(oPickupDuration.getValueStateText());
+            }
+
+        },
+
+        _checkPickMandatoryFields: function(){
+
+            const sDate     = this.byId("idMainPickupDate").getValue();
+            const sTime     = this.byId("idMainPickupTime").getValue();
+            const sDuration = this.byId("idMainPickupDuration").getValue();
+
+            if (sDate && sTime && sDuration){
+                return true;
+            } else {
+                return false;
             }
 
         },
@@ -450,7 +619,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                     pickupComment: oData.pickupComment
                 },
                 success: function(oData, oResponse) {
-debugger;
+
                     const sSapMessage = oResponse?.headers?.["sap-message"];
                     if (sSapMessage){
                         try {
@@ -491,7 +660,62 @@ debugger;
 
         },
 
-        _checkCloseDialog: function(oPromise){
+        _submitChangesPickupDialog: function(fnAfterSavePickupDialog){
+
+            const oModel = this.getView()?.getModel(); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const oDialog = this.byId("idPickupDialog");
+            const oContext = oDialog.getBindingContext();
+            const oData = oContext?.getObject();
+
+            oModel.callFunction("/pickup", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: oData.reservationNo,
+                    pickupDate: oData.pickupDate,
+                    pickupTime: oData.pickupTime,
+                    pickupDuration: oData.pickupDuration,
+                    pickupComment: oData.pickupComment
+                },
+                success: function(oData, oResponse) {
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oResourceBundle.getText("Main.PickupErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                        fnAfterSavePickupDialog();
+                    }
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+
+                    const oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Main.PickupErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oBundle.getText("Main.PickupErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                    }
+                    
+                }.bind(this)
+            });
+
+        },
+
+        _checkCloseDialog: function(oPromise, oDialog){
 
             const oModel = this.getView().getModel();
             const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
@@ -512,7 +736,7 @@ debugger;
                                 if (oPromise){
                                     oPromise.resolve();
                                 } else {
-                                    this._pHeaderDialog.then((oDialog) => {
+                                    oDialog.then((oDialog) => {
                                         oDialog.close();
                                     });
                                 }
@@ -524,7 +748,7 @@ debugger;
                 if (oPromise){
                     oPromise.resolve();
                 } else {
-                    this._pHeaderDialog.then((oDialog) => {
+                    oDialog.then((oDialog) => {
                         oDialog.close();
                     });
                 }
@@ -573,6 +797,66 @@ debugger;
                     oDialog.open();
                 });
             }
+
+        },
+
+        _openDialogPickup: function(oSelected){
+
+            this._aSelectedItems = oSelected; 
+            this._iCurrentIndex = 0;
+            const oView = this.getView();
+            const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
+            const oModel = oContext.getModel();
+
+            if (!this._pPickupDialog) {
+
+                this._pPickupDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "com.ep.zgiftscockpit.view.fragments.MainPickupDialog",
+                    controller: this
+                }).then((oDialog) => {
+                    oView.addDependent(oDialog);
+                    this._setEscapeHandler(oDialog);
+                    this._loadDurationvalues();
+                    this._setPickupFieldsMandatory();
+                    return oDialog;
+                });
+
+            }
+
+            this._pPickupDialog.then((oDialog) => {
+                oDialog.setBindingContext(oContext);
+                this.OnDialogPickupArrowsVisibility();
+                oDialog.open();
+            });
+
+        },
+
+        _setPickupFieldsMandatory: function(){
+
+            this.byId("idMainPickupDate").setMandatory(true);
+            this.byId("idMainPickupTime").setMandatory(true);
+            this.byId("idMainPickupDuration").setMandatory(true);
+
+        },
+
+        _loadDurationvalues: function() {
+
+            if (!this?._aDurations || !this?._aDurations?.length) {
+                var oModel = this.getView().getModel();
+                oModel.read("/zz_pv_gifts_ckpt_sh_pickdurati", {
+                    success: (oData) => {
+                        this._aDurations = oData.results.map(item => item.Duration);
+                    },
+                    error: () => {
+                        this._aDurations = [];
+                    }
+                });
+
+            }
+
+            var oSmartField = this.byId("idMainPickupDuration");
+            oSmartField.attachChange(this.onPickupDurationChange.bind(this));
 
         },
 
@@ -735,16 +1019,25 @@ debugger;
 
         _enableFooterButtons: function(sKey){
 
+            // Approve Button
             if (sKey == '3' || sKey == 'A'){
                 this.byId("idMainApproveBtn")?.setEnabled(true);
             } else {
                 this.byId("idMainApproveBtn")?.setEnabled(false);
             }
 
+            // Reject Button
             if (sKey == '2' || sKey == '3' || sKey == '5' || sKey == '6' || sKey == 'A'){
                 this.byId("idMainRejectBtn")?.setEnabled(true);
             } else {
                 this.byId("idMainRejectBtn")?.setEnabled(false);
+            }
+
+            // Pickup Button
+            if (sKey !== '4' && sKey !== '5'){
+                this.byId("idMainPickBtn")?.setEnabled(true);
+            } else {
+                this.byId("idMainPickBtn")?.setEnabled(false);
             }
 
         },
