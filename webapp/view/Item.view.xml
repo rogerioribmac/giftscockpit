@@ -58,15 +58,26 @@
             </uxap:headerContent>
 
             <uxap:sections>
-
-
-
                     <uxap:ObjectPageSection titleUppercase="false" title="{i18n>Item.Items}">
                         <uxap:subSections>
                             <uxap:ObjectPageSubSection titleUppercase="false">
                                 <uxap:blocks>
                                     
                                     <core:Fragment fragmentName="com.ep.zgiftscockpit.view.fragments.ItemSmartTable" type="XML"/>                   
+
+                                </uxap:blocks>
+                            </uxap:ObjectPageSubSection>
+                        </uxap:subSections>
+                    </uxap:ObjectPageSection>
+            </uxap:sections>
+
+            <uxap:sections>
+                    <uxap:ObjectPageSection titleUppercase="false" title="{i18n>Item.Attachments}">
+                        <uxap:subSections>
+                            <uxap:ObjectPageSubSection titleUppercase="false">
+                                <uxap:blocks>
+                                    
+                                    <core:Fragment fragmentName="com.ep.zgiftscockpit.view.fragments.ItemAttachments" type="XML"/>                   
 
                                 </uxap:blocks>
                             </uxap:ObjectPageSubSection>

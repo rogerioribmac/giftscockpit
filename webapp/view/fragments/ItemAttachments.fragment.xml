@@ -1,0 +1,24 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:core="sap.ui.core"
+    xmlns:upload="sap.m.upload" >
+
+    <upload:UploadSet
+            id="idItemsUploadSet"
+            instantUpload="false"
+            showIcons="true"
+            uploadEnabled="false"
+            ena="false"
+            items="{path: 'to_attach', templateShareable: false}"
+            mode="SingleSelectMaster">
+        <upload:items>
+            <upload:UploadSetItem
+                    fileName="{fullFileName}"
+                    mediaType="{mimeType}">
+            </upload:UploadSetItem>
+        </upload:items>
+    </upload:UploadSet>
+
+</core:FragmentDefinition>
