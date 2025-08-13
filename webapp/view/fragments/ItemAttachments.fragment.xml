@@ -3,19 +3,25 @@
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
     xmlns:core="sap.ui.core"
-    xmlns:upload="sap.m.upload" 
-
+    xmlns:upload="sap.m.upload" >
+    
     <upload:UploadSet
             id="idItemsUploadSet"
             instantUpload="false"
             showIcons="true"
-            uploadEnabled="false"
-            items="{path: 'to_attach', templateShareable: false}"
-            mode="SingleSelectMaster">
+            uploadEnabled="true"
+            terminationEnabled="true"
+            maxFileNameLength="30"
+			maxFileSize="200"
+            items="{to_attach}"
+            mode="MultiSelect">
         <upload:items>
             <upload:UploadSetItem
-                    fileName="{fullFileName}"
-                    mediaType="{mimeType}">
+                    fileName="{fileName}"
+                    mediaType="{mimeType}"
+                    url="#"
+                    openPressed="onAttachmentSelection"
+                    app:fileContent="{binaryContent}" >
             </upload:UploadSetItem>
         </upload:items>
     </upload:UploadSet>
