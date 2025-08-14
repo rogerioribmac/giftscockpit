@@ -807,28 +807,52 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             const oView = this.getView();
             const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
             const oModel = oContext.getModel();
+debugger;
+            if (this._checkPickupStatus(oSelected)){
 
-            if (!this._pPickupDialog) {
+                if (!this._pPickupDialog) {
 
-                this._pPickupDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "com.ep.zgiftscockpit.view.fragments.MainPickupDialog",
-                    controller: this
-                }).then((oDialog) => {
-                    oView.addDependent(oDialog);
-                    this._setEscapeHandler(oDialog);
-                    this._loadDurationvalues();
-                    this._setPickupFieldsMandatory();
-                    return oDialog;
+                    this._pPickupDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "com.ep.zgiftscockpit.view.fragments.MainPickupDialog",
+                        controller: this
+                    }).then((oDialog) => {
+                        oView.addDependent(oDialog);
+                        this._setEscapeHandler(oDialog);
+                        this._loadDurationvalues();
+                        this._setPickupFieldsMandatory();
+                        return oDialog;
+                    });
+
+                }
+
+                this._pPickupDialog.then((oDialog) => {
+                    oDialog.setBindingContext(oContext);
+                    this.OnDialogPickupArrowsVisibility();
+                    oDialog.open();
                 });
+
+            } else {
 
             }
 
-            this._pPickupDialog.then((oDialog) => {
-                oDialog.setBindingContext(oContext);
-                this.OnDialogPickupArrowsVisibility();
-                oDialog.open();
-            });
+        },
+
+        _checkPickupStatus: function(oSelected){
+
+            for (let iIndex = 0; iIndex < oSelected.length; iIndex++){
+
+                const oContext = oSelected[iIndex].getBindingContext();
+                const sStatus = oContext.getProperty("reservationStatus");
+                if (sStatus == '4' || sStatus == '5'){
+                    const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                    const sMessage = oBundle.getText("Main.ErrorMsgPickupStatus");
+                    MessageToast.show(sMessage);
+                    return false;
+                }
+
+            }
+            return true;
 
         },
 
