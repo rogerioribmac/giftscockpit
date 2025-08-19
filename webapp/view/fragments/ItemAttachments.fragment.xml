@@ -14,6 +14,8 @@
             maxFileNameLength="30"
 			maxFileSize="200"
             items="{to_attach}"
+            afterItemAdded="onAfterItemAdded"
+			uploadCompleted="onUploadCompleted"
             mode="MultiSelect">
         <upload:items>
             <upload:UploadSetItem
@@ -21,7 +23,13 @@
                     mediaType="{mimeType}"
                     url="#"
                     openPressed="onAttachmentSelection"
+                    statuses="{to_status}"
                     app:fileContent="{binaryContent}" >
+                    <upload:statuses>
+						<ObjectStatus
+								title="{title}"
+								text="{text}" />
+					</upload:statuses>
             </upload:UploadSetItem>
         </upload:items>
     </upload:UploadSet>

@@ -86,6 +86,61 @@ function (Controller,MessageToast) {
                   }.bind(this)
                 }
               });
+        },
+
+        onAfterItemAdded: function(oEvent){
+          debugger;
+          var item = oEvent.getParameter("item")
+          this._createEntity(item)
+          .then((id) => {
+            this._uploadContent(item, id);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+
+        },
+
+        onUploadCompleted: function(oEvent){
+          var oUploadSet = this.byId("idItemsUploadSet");
+          oUploadSet.removeAllIncompleteItems();
+          oUploadSet.getBinding("items").refresh();
+        },
+
+        _createEntity: function (item) {
+
+            var data = {
+              mediaType: item.getMediaType(),
+              fileName: item.getFileName(),
+              size: item.getFileObject().size
+            };
+    
+          return new Promise((resolve, reject) => {
+            oModel.callFunction("/allowReservation", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: sReservationNo,
+                    Reason: sReason
+                },
+                success: function(oData, oResponse) {
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+                    
+                }.bind(this)
+            });
+          })	
+
+        },
+
+        _uploadContent: function (item, id) {
+
+          var url = `/attachments/Files(${id})/content`
+          item.setUploadUrl(url);	
+          var oUploadSet = this.byId("uploadSet");
+          oUploadSet.setHttpRequestMethod("PUT")
+          oUploadSet.uploadItem(item);
+
         }
 
     });

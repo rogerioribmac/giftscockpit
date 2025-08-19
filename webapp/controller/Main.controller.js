@@ -807,7 +807,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             const oView = this.getView();
             const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
             const oModel = oContext.getModel();
-debugger;
+
             if (this._checkPickupStatus(oSelected)){
 
                 if (!this._pPickupDialog) {
