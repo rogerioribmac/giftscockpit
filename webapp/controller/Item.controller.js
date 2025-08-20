@@ -1,8 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/m/MessageBox"
 ],
-function (Controller,MessageToast) {
+function (Controller,MessageToast,MessageBox) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Item", {
@@ -89,58 +90,76 @@ function (Controller,MessageToast) {
         },
 
         onAfterItemAdded: function(oEvent){
-          debugger;
-          var item = oEvent.getParameter("item")
-          this._createEntity(item)
-          .then((id) => {
-            this._uploadContent(item, id);
-          })
-          .catch((err) => {
-            console.log(err);
-          })
 
         },
 
         onUploadCompleted: function(oEvent){
-          var oUploadSet = this.byId("idItemsUploadSet");
-          oUploadSet.removeAllIncompleteItems();
-          oUploadSet.getBinding("items").refresh();
+
+          const oModel = this.getView().getModel();
+          const oItem = oEvent.getParameter("item")
+          const oContext = oEvent.getSource().getBindingContext();
+          const sReservationNo = oContext.getProperty("reservationNo");   
+
+          let oReader = new FileReader();
+
+          oReader.onload = (oEvent) => {
+
+            const sBase64Content = oEvent.target.result.split(",")[1];
+            const oBundle = this.getView().getModel("i18n").getResourceBundle();
+
+            return new Promise((resolve, reject) => {
+              oModel.callFunction("/uploadFile", {
+                  method: "POST",
+                  urlParameters: {
+                      reservationNo: sReservationNo,
+                      Filename: oItem.getFileName(),
+                      Mediatype: oItem.getMediaType(),
+                      Filesize: oItem.getFileObject().size,
+                      Content: sBase64Content
+                  },
+                  success: function(oData, oResponse) {
+                    var oUploadSet = this.byId("idItemsUploadSet");
+                    oUploadSet.removeAllIncompleteItems();
+                    oUploadSet.getBinding("items").refresh();
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                      try {
+                          const oMessage = JSON.parse(sSapMessage);
+                          MessageBox.success(oMessage.message);
+                      } catch (e) {
+                          const sSuccessMessage = oBundle.getText("Item.UploadErrorMsg");
+                          MessageBox.error(sSuccessMessage);
+                      }
+                    }
+
+                  }.bind(this),
+                  error: function(oError, oResponse) {
+                      const oResponseJSON = JSON.parse(oError.responseText);
+                      try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                      } catch (e) {
+                        const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                      } 
+                  }.bind(this)
+              });
+            })
+          }
+
+          const oFile = oItem.getFileObject();
+          oReader.readAsDataURL(oFile);
+          
         },
 
-        _createEntity: function (item) {
-
-            var data = {
-              mediaType: item.getMediaType(),
-              fileName: item.getFileName(),
-              size: item.getFileObject().size
-            };
-    
-          return new Promise((resolve, reject) => {
-            oModel.callFunction("/allowReservation", {
-                method: "POST",
-                urlParameters: {
-                    reservationNo: sReservationNo,
-                    Reason: sReason
-                },
-                success: function(oData, oResponse) {
-
-                }.bind(this),
-                error: function(oError, oResponse) {
-                    
-                }.bind(this)
-            });
-          })	
-
-        },
-
-        _uploadContent: function (item, id) {
-
-          var url = `/attachments/Files(${id})/content`
-          item.setUploadUrl(url);	
-          var oUploadSet = this.byId("uploadSet");
-          oUploadSet.setHttpRequestMethod("PUT")
-          oUploadSet.uploadItem(item);
-
+        onAfterItemRemoved: function(oEvent){
+          debugger;
         }
 
     });

@@ -7,7 +7,7 @@
     
     <upload:UploadSet
             id="idItemsUploadSet"
-            instantUpload="false"
+            instantUpload="true"
             showIcons="true"
             uploadEnabled="true"
             terminationEnabled="true"
@@ -16,6 +16,7 @@
             items="{to_attach}"
             afterItemAdded="onAfterItemAdded"
 			uploadCompleted="onUploadCompleted"
+            afterItemRemoved="onAfterItemRemoved"
             mode="MultiSelect">
         <upload:items>
             <upload:UploadSetItem
@@ -23,7 +24,7 @@
                     mediaType="{mimeType}"
                     url="#"
                     openPressed="onAttachmentSelection"
-                    statuses="{to_status}"
+                    statuses="{ path: 'to_status', templateShareable: false}"
                     app:fileContent="{binaryContent}" >
                     <upload:statuses>
 						<ObjectStatus
