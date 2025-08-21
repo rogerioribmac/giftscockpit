@@ -159,7 +159,57 @@ function (Controller,MessageToast,MessageBox) {
         },
 
         onAfterItemRemoved: function(oEvent){
-          debugger;
+
+          const oModel = this.getView().getModel();
+          const oItem = oEvent.getParameter("item"); 
+          const oContext = oItem.getBindingContext();
+          const sReservationNo = oContext.getProperty("reservationNo");
+          const sTypeIdA = oContext.getProperty("typeIdA"); 
+          const sTypeIdB = oContext.getProperty("typeIdB");
+          const sAttachId = oContext.getProperty("attachId");
+          
+          oModel.callFunction("/deleteFile", {
+              method: "POST",
+              urlParameters: {
+                  reservationNo: sReservationNo,
+                  TypeIdA: sTypeIdA,
+                  AttachId: sAttachId,
+                  TypeIdB: sTypeIdB
+              },
+              success: function(oData, oResponse) {
+
+                var oUploadSet = this.byId("idItemsUploadSet");
+                oUploadSet.getBinding("items").refresh();
+
+                const sSapMessage = oResponse?.headers?.["sap-message"];
+                if (sSapMessage){
+                  try {
+                      const oMessage = JSON.parse(sSapMessage);
+                      MessageBox.success(oMessage.message);
+                  } catch (e) {
+                      const sSuccessMessage = oBundle.getText("Item.UploadErrorMsg");
+                      MessageBox.error(sSuccessMessage);
+                  }
+                }
+
+              }.bind(this),
+              error: function(oError, oResponse) {
+
+                  const oResponseJSON = JSON.parse(oError.responseText);
+                  try {
+                    const sMessage = oResponseJSON?.error?.message?.value;
+                    if (sMessage) {
+                        MessageBox.error(sMessage);
+                    } else {
+                        const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    }
+                  } catch (e) {
+                    const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                    MessageBox.error(sErrorMessage);
+                  } 
+              }.bind(this)
+          });
         }
 
     });
