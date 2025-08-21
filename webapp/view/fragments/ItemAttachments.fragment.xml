@@ -17,12 +17,13 @@
             afterItemAdded="onAfterItemAdded"
 			uploadCompleted="onUploadCompleted"
             afterItemRemoved="onAfterItemRemoved"
-            mode="MultiSelect">
+            mode="SingleSelectMaster" >
         <upload:items>
             <upload:UploadSetItem
                     fileName="{fileName}"
                     mediaType="{mimeType}"
                     url="#"
+                    visibleEdit="false"
                     openPressed="onAttachmentSelection"
                     statuses="{ path: 'to_status', templateShareable: false}"
                     app:fileContent="{binaryContent}" >

@@ -9,8 +9,10 @@ function (Controller,MessageToast,MessageBox) {
     return Controller.extend("com.ep.zgiftscockpit.controller.Item", {
         
         onInit: function () {
-            const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            oRouter.getRoute("RouteItem").attachPatternMatched(this._onRouteMatched, this);
+
+          const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+          oRouter.getRoute("RouteItem").attachPatternMatched(this._onRouteMatched, this);
+
         },
 
         onAttachmentSelection: function(oEvent){
@@ -21,26 +23,7 @@ function (Controller,MessageToast,MessageBox) {
           const sMimeType = oItem?.getMediaType();
           let sBase64 = oItem?.data("fileContent");
 
-          if (!sBase64) {
-              const oBundle = this.getView().getModel("i18n").getResourceBundle();
-              const sMessage = oBundle.getText("Item.AttachNoContent");
-              sap.m.MessageToast.show(sMessage);
-              return;
-          }
-
-          if (sBase64.startsWith("data:")) {
-              sBase64 = sBase64.split(",")[1];
-          }
-
-          const sByteCharacters = atob(sBase64);
-          const aByteNumbers = new Array(sByteCharacters.length);
-          for (let iIndex = 0; iIndex < sByteCharacters.length; iIndex++) {
-              aByteNumbers[iIndex] = sByteCharacters.charCodeAt(iIndex);
-          }
-
-          const aByteArray = new Uint8Array(aByteNumbers);
-          const oBlob = new Blob([aByteArray], { type: sMimeType });
-          const sUrl = URL.createObjectURL(oBlob);
+          const sUrl = this._generateBlobUrl(sBase64,sMimeType);
 
           const sMimeLower = sMimeType.toLowerCase();
           if (sMimeLower.includes("excel") || sMimeLower.includes("word") || sMimeLower.includes("presentation")) {
@@ -91,6 +74,12 @@ function (Controller,MessageToast,MessageBox) {
 
         onAfterItemAdded: function(oEvent){
 
+          // in order to include the file at the end, and not in the beginning. 
+          // Then the order will be the same whe the page is reloaded
+          var oUploadSet = this.byId("idItemsUploadSet");
+          var oItem = oEvent.getParameter("item");
+          oUploadSet.addItem(oItem);
+
         },
 
         onUploadCompleted: function(oEvent){
@@ -118,15 +107,14 @@ function (Controller,MessageToast,MessageBox) {
                       Content: sBase64Content
                   },
                   success: function(oData, oResponse) {
-                    var oUploadSet = this.byId("idItemsUploadSet");
-                    oUploadSet.removeAllIncompleteItems();
-                    oUploadSet.getBinding("items").refresh();
+
+                    this._insertUploadSet(oData,oItem,sBase64Content);
 
                     const sSapMessage = oResponse?.headers?.["sap-message"];
                     if (sSapMessage){
                       try {
                           const oMessage = JSON.parse(sSapMessage);
-                          MessageBox.success(oMessage.message);
+                          MessageToast.show(oMessage.message);
                       } catch (e) {
                           const sSuccessMessage = oBundle.getText("Item.UploadErrorMsg");
                           MessageBox.error(sSuccessMessage);
@@ -178,18 +166,16 @@ function (Controller,MessageToast,MessageBox) {
               },
               success: function(oData, oResponse) {
 
-                var oUploadSet = this.byId("idItemsUploadSet");
-                oUploadSet.getBinding("items").refresh();
-
                 const sSapMessage = oResponse?.headers?.["sap-message"];
                 if (sSapMessage){
                   try {
                       const oMessage = JSON.parse(sSapMessage);
-                      MessageBox.success(oMessage.message);
+                      MessageToast.show(oMessage.message);
                   } catch (e) {
                       const sSuccessMessage = oBundle.getText("Item.UploadErrorMsg");
                       MessageBox.error(sSuccessMessage);
                   }
+                  
                 }
 
               }.bind(this),
@@ -210,6 +196,52 @@ function (Controller,MessageToast,MessageBox) {
                   } 
               }.bind(this)
           });
+        },
+
+        _generateBlobUrl: function(sBase64,sMimeType){
+
+          if (!sBase64) {
+              const oBundle = this.getView().getModel("i18n").getResourceBundle();
+              const sMessage = oBundle.getText("Item.AttachNoContent");
+              sap.m.MessageToast.show(sMessage);
+              return;
+          }
+
+          if (sBase64.startsWith("data:")) {
+              sBase64 = sBase64.split(",")[1];
+          }
+
+          const sByteCharacters = atob(sBase64);
+          const aByteNumbers = new Array(sByteCharacters.length);
+          for (let iIndex = 0; iIndex < sByteCharacters.length; iIndex++) {
+              aByteNumbers[iIndex] = sByteCharacters.charCodeAt(iIndex);
+          }
+
+          const aByteArray = new Uint8Array(aByteNumbers);
+          const oBlob = new Blob([aByteArray], { type: sMimeType });
+          const sUrl = URL.createObjectURL(oBlob);
+          return sUrl;
+          
+        },
+
+        _insertUploadSet: function(oData,oItem,sBase64Content){
+
+          oItem.setUrl(this._generateBlobUrl(sBase64Content,oItem.getMediaType()));
+
+          oItem.insertStatus(new sap.m.ObjectStatus({
+            title: oData.uploadFile.titleBy,
+            text: oData.uploadFile.valueBy
+          }));
+
+          oItem.insertStatus(new sap.m.ObjectStatus({
+            title: oData.uploadFile.titleOn,
+            text: oData.uploadFile.valueOn
+          }));
+
+          oItem.data("fileContent", sBase64Content);
+
+          oItem.setVisibleEdit(false);
+
         }
 
     });
