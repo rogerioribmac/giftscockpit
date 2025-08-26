@@ -35,26 +35,9 @@
             </uxap:headerTitle>
 
             <uxap:headerContent>
-                <FlexBox wrap="Wrap">
-                    <Avatar src="sap-icon://customer-order-entry" backgroundColor="Random" displaySize="L" class="sapUiTinyMarginEnd"/>
 
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus title="{i18n>Item.DG}" text="{dg}"/>
-                        <ObjectStatus title="{i18n>Item.EventOrganizer}" text="{eventOrganizer}"/>
-                        <ObjectStatus title="{i18n>Item.ContactPerson}" text="{contactPerson}"/>
-                        <ObjectStatus title="{i18n>Item.Service}" text="{service}"/>
-                        <ObjectStatus title="{i18n>Item.EventName}" text="{eventName}"/>
-                    </layout:VerticalLayout>
-
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus title="{i18n>Item.EventCountry}" text="{eventCountryTxt}"/>
-                        <ObjectStatus title="{i18n>Item.EventDate}" text="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }"/>
-                        <ObjectStatus title="{i18n>Item.NeedByDate}" text="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }"/>
-                        <ObjectStatus title="{i18n>Item.Requestor}" text="{requestor}"/>
-                        <ObjectStatus title="{i18n>Item.Comment}" text="{pickupComment}"/>
-                    </layout:VerticalLayout>
-
-                </FlexBox>
+                <core:Fragment fragmentName="com.ep.zgiftscockpit.view.fragments.ItemHeaderForm" type="XML"/>
+                
             </uxap:headerContent>
 
             <uxap:sections>

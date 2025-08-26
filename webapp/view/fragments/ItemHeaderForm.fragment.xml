@@ -1,47 +1,29 @@
 <core:FragmentDefinition 
     xmlns="sap.m"
     xmlns:f="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
     xmlns:core="sap.ui.core">
     
-    <f:SimpleForm
-        id="SimpleFormDisplay"
-        layout="ResponsiveGridLayout"
-        editable="false"
-        class="sapUiSmallMarginBeginEnd">
+    <FlexBox wrap="Wrap">
 
-        <Label text="{i18n>Item.DG}" />
-        <Text text="{dg}" />
+        <Avatar src="sap-icon://customer-order-entry" backgroundColor="Random" displaySize="L" class="sapUiTinyMarginEnd"/>
 
-        <Label text="{i18n>Item.EventOrganizer}" />
-        <Text text="{eventOrganizer}" />
+        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+            <ObjectStatus title="{i18n>Item.DG}" text="{dg}"/>
+            <ObjectStatus title="{i18n>Item.EventOrganizer}" text="{eventOrganizer}"/>
+            <ObjectStatus title="{i18n>Item.ContactPerson}" text="{contactPerson}"/>
+            <ObjectStatus title="{i18n>Item.Service}" text="{service}"/>
+            <ObjectStatus title="{i18n>Item.EventName}" text="{eventName}"/>
+        </layout:VerticalLayout>
 
-        <Label text="{i18n>Item.ContactPerson}" />
-        <Text text="{contactPerson}" />
+        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+            <ObjectStatus title="{i18n>Item.EventCountry}" text="{eventCountryTxt}"/>
+            <ObjectStatus title="{i18n>Item.EventDate}" text="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }"/>
+            <ObjectStatus title="{i18n>Item.NeedByDate}" text="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }"/>
+            <ObjectStatus title="{i18n>Item.Requestor}" text="{requestor}"/>
+            <ObjectStatus title="{i18n>Item.Comment}" text="{pickupComment}"/>
+        </layout:VerticalLayout>
 
-        <Label text="{i18n>Item.Service}" />
-        <Text text="{service}" />
-
-        <Label text="{i18n>Item.EventName}" />
-        <Text text="{eventName}" />
-
-        <Label text="{i18n>Item.EventCountry}" />
-        <Text text="{eventCountryTxt}" />
-
-        <Label text="{i18n>Item.EventDate}" />
-        <Text text="{ path: 'eventDate', type: 'sap.ui.model.type.Date' }" />
-
-        <Label text="{i18n>Item.NeedByDate}" />
-        <Text text="{ path: 'needByDate', type: 'sap.ui.model.type.Date' }" />
-
-        <Label text="{i18n>Item.Requestor}" />
-        <Text text="{requestor}" />
-
-        <Label text="{i18n>Item.Comment}" />
-        <Text text="{commentObj}" />
-
-        <Label text="{i18n>Item.PickupComment}" />
-        <Text text="{pickupComment}" />
-
-    </f:SimpleForm>  
+    </FlexBox>
 
 </core:FragmentDefinition>
