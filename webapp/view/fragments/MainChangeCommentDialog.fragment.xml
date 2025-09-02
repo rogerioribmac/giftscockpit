@@ -1,0 +1,45 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:layout="sap.ui.layout">
+    
+    <Dialog
+        id="idChangeCommentDialog"
+        title="{i18n>Main.ChangeComment}"
+        contentWidth="40rem"
+        draggable="true"
+        resizable="true"
+        class="sapUiContentPadding" >
+           
+        <f:SimpleForm
+            title="{parts: [
+                {path: 'i18n>Main.Reservation'},
+                {path: 'reservationNo'}
+            ],
+            formatter: '.formatDialogModifyHeaderTitle'}"
+            editable="true"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="true"
+            columnsXL="1"
+			columnsL="1"
+			columnsM="1">
+            <f:content>
+                <Label text="{i18n>Main.Title}" />
+                <Input value="{commentTitle}" width="100%" id="idCommentTitleInput"/>
+                <Label text="{i18n>Main.Comment}" />
+                <TextArea value="{commentObj}" rows="12" growing="false" width="100%" id="idCommentObjTextArea" />
+            </f:content>
+        </f:SimpleForm>
+
+        <buttons>
+            <Button icon="sap-icon://navigation-left-arrow" press="OnDialogCommentMoveLeft" id="idDialogCommentLeft"/>
+            <Button icon="sap-icon://navigation-right-arrow" press="OnDialogCommentMoveRight" id="idDialogCommentRight"/>
+            <Button text="Save" type="Emphasized" press="onSaveCommentDialog"/>
+            <Button text="Cancel" press="onCancelCommentDialog"/>
+        </buttons>
+
+    </Dialog>
+
+</core:FragmentDefinition>

@@ -8,6 +8,7 @@
         <Button text="{i18n>Main.Reject}" press="onRejectReservation" type="Reject" icon="sap-icon://decline" id="idMainRejectBtn" />
         <Button text="{i18n>Main.ModifyHeader}" press="onModifyHeader" icon="sap-icon://edit"/>
         <Button text="{i18n>Main.Pickup}" press="onPickupDialog" icon="sap-icon://enter-more" id="idMainPickBtn" />
+        <Button text="{i18n>Main.ChangeComment}" press="onChangeCommentDialog" icon="sap-icon://comment" id="idMainCommentBtn" />
     </Toolbar>
 
 </core:FragmentDefinition>
