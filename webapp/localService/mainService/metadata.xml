@@ -14,12 +14,19 @@
     </edmx:Reference>
     <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
         <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="SAP__common"/>
     </edmx:Reference>
     <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
         <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
     </edmx:Reference>
+    <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Core.V1" Alias="SAP__core"/>
+    </edmx:Reference>
     <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
         <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PDF',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PDF.v1" Alias="SAP__PDF"/>
     </edmx:Reference>
     <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
         <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
@@ -29,6 +36,9 @@
     </edmx:Reference>
     <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
         <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='SAP__SELF',Version='0001',SAP__Origin='ECC')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PDF.v1" Alias="SAP__PDF"/>
     </edmx:Reference>
     <edmx:DataServices m:DataServiceVersion="2.0">
         <Schema Namespace="cds_zz_sd_gifts_cockpit" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -51,6 +61,45 @@
                     <PropertyRef Name="zz_delegation"/>
                 </Key>
                 <Property Name="zz_delegation" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Event organiser" sap:quickinfo="Event organizer" sap:value-list="fixed-values"/>
+            </EntityType>
+            <EntityType Name="zz_dd_gifts_ckpt_sh_pickduratiType" sap:label="Value Help Pickup Duration" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Duration"/>
+                </Key>
+                <Property Name="Duration" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Pickup duration"/>
+            </EntityType>
+            <EntityType Name="zz_pv_gifts_ckpt_attachmentsType" sap:label="Gifts Cockpit - Attachments" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="reservationNo"/>
+                    <PropertyRef Name="attachId"/>
+                </Key>
+                <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Reservation" sap:quickinfo="Number of reservation/dependent requirements"/>
+                <Property Name="attachId" Type="Edm.String" Nullable="false" MaxLength="70" sap:label="Instance ID" sap:quickinfo="Instance Ident. in BOR Compat. Persistent Object References"/>
+                <Property Name="typeIdA" Type="Edm.String" MaxLength="32" sap:display-format="UpperCase" sap:label="Object Type" sap:quickinfo="Type of Objects in Persistent Object References"/>
+                <Property Name="typeIdB" Type="Edm.String" MaxLength="32" sap:display-format="UpperCase" sap:label="Object Type" sap:quickinfo="Type of Objects in Persistent Object References"/>
+                <Property Name="fileName" Type="Edm.String" MaxLength="50" sap:label="Document title" sap:quickinfo="Short description of contents"/>
+                <Property Name="fileExtension" Type="Edm.String" MaxLength="3"/>
+                <Property Name="fileDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Changed on" sap:quickinfo="Last Changed On"/>
+                <Property Name="fileTime" Type="Edm.Time" Precision="0" sap:label="Changed At" sap:quickinfo="Time of Last Change"/>
+                <Property Name="mimeType" Type="Edm.String" MaxLength="128" sap:label="MIME type" sap:quickinfo="HTML content type" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="binaryContent" Type="Edm.Binary" sap:label="Attachment Content" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="codeDocClass" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Document class" sap:quickinfo="Code for document class"/>
+                <Property Name="yearID" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Object year" sap:quickinfo="Object: Year from ID"/>
+                <Property Name="numberID" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Object number" sap:quickinfo="Object: Number from ID"/>
+                <NavigationProperty Name="to_reservation" Relationship="cds_zz_sd_gifts_cockpit.assoc_0A93E67D957118EB6A15EE1686278CED" FromRole="FromRole_assoc_0A93E67D957118EB6A15EE1686278CED" ToRole="ToRole_assoc_0A93E67D957118EB6A15EE1686278CED"/>
+                <NavigationProperty Name="to_status" Relationship="cds_zz_sd_gifts_cockpit.assoc_F902A971813A1512F599231C4FD1029A" FromRole="FromRole_assoc_F902A971813A1512F599231C4FD1029A" ToRole="ToRole_assoc_F902A971813A1512F599231C4FD1029A"/>
+            </EntityType>
+            <EntityType Name="zz_pv_gifts_ckpt_attach_statusType" sap:label="Gifts Cockpit - Attachments" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="reservationNo"/>
+                    <PropertyRef Name="attachId"/>
+                    <PropertyRef Name="title"/>
+                </Key>
+                <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Reservation" sap:quickinfo="Number of reservation/dependent requirements"/>
+                <Property Name="attachId" Type="Edm.String" Nullable="false" MaxLength="70" sap:label="Instance ID" sap:quickinfo="Instance Ident. in BOR Compat. Persistent Object References"/>
+                <Property Name="title" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="text" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created by" sap:quickinfo="Created By"/>
+                <NavigationProperty Name="to_header" Relationship="cds_zz_sd_gifts_cockpit.assoc_5233A03264B3A13F10BC5463C0833787" FromRole="FromRole_assoc_5233A03264B3A13F10BC5463C0833787" ToRole="ToRole_assoc_5233A03264B3A13F10BC5463C0833787"/>
             </EntityType>
             <EntityType Name="zz_pv_gifts_ckpt_itemsType" sap:label="Gifts Cockpit - Items" sap:content-version="1">
                 <Key>
@@ -83,6 +132,11 @@
                 <Property Name="returnedItems" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="returnedItemsUoM" sap:label="Returned items" sap:quickinfo="Quantity in unit of entry"/>
                 <Property Name="returnedItemsUoM" Type="Edm.String" MaxLength="3" sap:label="Unit of Entry" sap:quickinfo="Unit of entry" sap:semantics="unit-of-measure"/>
                 <Property Name="returnedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Returned date" sap:quickinfo="Posting Date in the Document"/>
+                <Property Name="ItemCrit" Type="Edm.String" MaxLength="5"/>
+                <Property Name="grossWeight" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="UnitOfWeight" sap:label="Gross Weight"/>
+                <Property Name="UnitOfWeight" Type="Edm.String" MaxLength="3" sap:label="Unit of Weight" sap:semantics="unit-of-measure"/>
+                <Property Name="Volume" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="UnitOfVolumn" sap:label="Volume"/>
+                <Property Name="UnitOfVolumn" Type="Edm.String" MaxLength="3" sap:label="Volume Unit" sap:semantics="unit-of-measure"/>
                 <NavigationProperty Name="to_reservation" Relationship="cds_zz_sd_gifts_cockpit.assoc_C7DA7E946E227034D95304A8ED5D4E6C" FromRole="ToRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C" ToRole="FromRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C"/>
             </EntityType>
             <EntityType Name="zz_pv_gifts_ckpt_reservationsType" sap:label="Gifts Cockpit - Reservations" sap:content-version="1">
@@ -90,7 +144,13 @@
                     <PropertyRef Name="reservationNo"/>
                 </Key>
                 <Property Name="allowReservation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="changeComment_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="deleteFile_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="modifyHeader_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="pickup_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="rejectReservation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="sendEmail_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="uploadFile_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Delete_mc" Type="Edm.Boolean" sap:label="Dyn. Method Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Update_mc" Type="Edm.Boolean" sap:label="Dyn. Method Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="reservationNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Reservation" sap:quickinfo="Number of reservation/dependent requirements" sap:creatable="false" sap:updatable="false"/>
@@ -105,17 +165,27 @@
                 <Property Name="eventCountryTxt" Type="Edm.String" MaxLength="15" sap:label="Country/Region Name" sap:quickinfo="Name of Country/Region (Short)" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="reservationStatus" Type="Edm.String" MaxLength="1" sap:text="reservationStatusTxt" sap:label="Status" sap:quickinfo="Reservation status"/>
                 <Property Name="reservationStatusTxt" Type="Edm.String" MaxLength="60" sap:label="Short Description" sap:quickinfo="Short Text for Fixed Values" sap:creatable="false" sap:updatable="false"/>
-                <Property Name="reservationCrit" Type="Edm.String" MaxLength="7"/>
-                <Property Name="reservationIcon" Type="Edm.String" MaxLength="50" sap:label="SAPUI5 Icon"/>
+                <Property Name="reservationCrit" Type="Edm.String" MaxLength="11"/>
+                <Property Name="reservationIcon" Type="Edm.String" MaxLength="50" sap:label="SAPUI5 Icon" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="pickupDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Pickup date"/>
                 <Property Name="pickupTime" Type="Edm.Time" Precision="0" sap:label="Pickup time"/>
-                <Property Name="pickupDuration" Type="Edm.String" MaxLength="2" sap:label="Pickup duration"/>
+                <Property Name="pickupDuration" Type="Edm.String" MaxLength="2" sap:label="Pickup duration" sap:value-list="fixed-values"/>
                 <Property Name="pickupComment" Type="Edm.String" MaxLength="120" sap:label="Pickup comment"/>
                 <Property Name="protocolResponsible" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Protocol responsible"/>
                 <Property Name="missionCancDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Mission cancelled" sap:quickinfo="Mission cancelled date"/>
                 <Property Name="requestor" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
-                <Property Name="commentObj" Type="Edm.String" MaxLength="200" sap:label="Comment" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="commentObj" Type="Edm.String" MaxLength="200" sap:label="Comment Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="commentTitle" Type="Edm.String" MaxLength="100" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="weight" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Weight"/>
+                <Property Name="bags" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Bags"/>
+                <NavigationProperty Name="to_attach" Relationship="cds_zz_sd_gifts_cockpit.assoc_8E15C2F23D9F28BBDF655D2F242DF4F2" FromRole="FromRole_assoc_8E15C2F23D9F28BBDF655D2F242DF4F2" ToRole="ToRole_assoc_8E15C2F23D9F28BBDF655D2F242DF4F2"/>
                 <NavigationProperty Name="to_items" Relationship="cds_zz_sd_gifts_cockpit.assoc_C7DA7E946E227034D95304A8ED5D4E6C" FromRole="FromRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C" ToRole="ToRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C"/>
+            </EntityType>
+            <EntityType Name="zz_pv_gifts_ckpt_sh_pickduratiType" sap:label="Gifts Cockpit - Items" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Duration"/>
+                </Key>
+                <Property Name="Duration" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Pickup duration"/>
             </EntityType>
             <EntityType Name="zz_pv_gifts_ckpt_statusType" sap:label="PV - Status Counter last year" sap:content-version="1">
                 <Key>
@@ -126,6 +196,198 @@
                 <Property Name="icon" Type="Edm.String" MaxLength="50" sap:label="SAPUI5 Icon"/>
                 <Property Name="description" Type="Edm.String" MaxLength="50" sap:label="Status description"/>
             </EntityType>
+            <EntityType Name="SAP__Currency" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CurrencyCode"/>
+                </Key>
+                <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="5" sap:label="Currency" sap:semantics="currency-code"/>
+                <Property Name="ISOCode" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="ISO code"/>
+                <Property Name="Text" Type="Edm.String" Nullable="false" MaxLength="15" sap:label="Short text"/>
+                <Property Name="DecimalPlaces" Type="Edm.Byte" Nullable="false" sap:label="Decimals"/>
+            </EntityType>
+            <EntityType Name="SAP__UnitOfMeasure" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="UnitCode"/>
+                </Key>
+                <Property Name="UnitCode" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Internal UoM" sap:semantics="unit-of-measure"/>
+                <Property Name="ISOCode" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="ISO Code"/>
+                <Property Name="ExternalCode" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Commercial"/>
+                <Property Name="Text" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Measurement Unit Txt"/>
+                <Property Name="DecimalPlaces" Type="Edm.Int16" sap:label="Decimal Places"/>
+            </EntityType>
+            <EntityType Name="SAP__DocumentDescription" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false" sap:label="UUID"/>
+                <Property Name="CreatedBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="CreatedAt" Type="Edm.DateTime" Nullable="false" Precision="0" sap:label="Time Stamp"/>
+                <Property Name="FileName" Type="Edm.String" Nullable="false" MaxLength="256"/>
+                <Property Name="Title" Type="Edm.String" Nullable="false" MaxLength="256"/>
+                <NavigationProperty Name="Format" Relationship="cds_zz_sd_gifts_cockpit.to_format" FromRole="FromRole_to_format" ToRole="ToRole_to_format"/>
+                <NavigationProperty Name="TableColumns" Relationship="cds_zz_sd_gifts_cockpit.to_tablecolumns" FromRole="FromRole_to_tablecolumns" ToRole="ToRole_to_tablecolumns"/>
+                <NavigationProperty Name="CoverPage" Relationship="cds_zz_sd_gifts_cockpit.to_coverpage" FromRole="FromRole_to_coverpage" ToRole="ToRole_to_coverpage"/>
+                <NavigationProperty Name="Signature" Relationship="cds_zz_sd_gifts_cockpit.to_signature" FromRole="FromRole_to_signature" ToRole="ToRole_to_signature"/>
+                <NavigationProperty Name="PDFStandard" Relationship="cds_zz_sd_gifts_cockpit.to_pdfstandard" FromRole="FromRole_to_pdfstandard" ToRole="ToRole_to_pdfstandard"/>
+            </EntityType>
+            <EntityType Name="SAP__Format" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="FitToPage" Type="cds_zz_sd_gifts_cockpit.SAP__FitToPage" Nullable="false"/>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="FontSize" Type="Edm.Int32" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Orientation" Type="Edm.String" Nullable="false" MaxLength="10" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PaperSize" Type="Edm.String" Nullable="false" MaxLength="10" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="BorderSize" Type="Edm.Int32" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MarginSize" Type="Edm.Int32" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="FontName" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Font Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="SAP__PDFStandard" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UsePDFAConformance" Type="Edm.Boolean" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DoEnableAccessibility" Type="Edm.Boolean" Nullable="false" sap:label="Indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="SAP__TableColumns" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Name"/>
+                    <PropertyRef Name="Header"/>
+                </Key>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="256" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Header" Type="Edm.String" Nullable="false" MaxLength="256" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HorizontalAlignment" Type="Edm.String" Nullable="false" MaxLength="10" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="SAP__CoverPage" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Title"/>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Name"/>
+                </Key>
+                <Property Name="Title" Type="Edm.String" Nullable="false" MaxLength="256" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="256" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Value" Type="Edm.String" Nullable="false" MaxLength="256" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="SAP__Signature" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DoSign" Type="Edm.Boolean" Nullable="false" sap:label="Indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Reason" Type="Edm.String" Nullable="false" MaxLength="256" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="SAP__ValueHelp" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="VALUEHELP"/>
+                </Key>
+                <Property Name="VALUEHELP" Type="Edm.String" Nullable="false"/>
+                <Property Name="FIELD_VALUE" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="DESCRIPTION" Type="Edm.String"/>
+            </EntityType>
+            <ComplexType Name="zz_ae_gifts_ckpt_attachments">
+                <Property Name="attachId" Type="Edm.String" MaxLength="70" sap:label="Instance ID"/>
+                <Property Name="binaryContent" Type="Edm.Binary" sap:label="Attachment Content"/>
+                <Property Name="fileName" Type="Edm.String" MaxLength="50" sap:label="Document title"/>
+                <Property Name="mimeType" Type="Edm.String" MaxLength="128" sap:label="MIME type"/>
+                <Property Name="titleBy" Type="Edm.String" MaxLength="20"/>
+                <Property Name="titleOn" Type="Edm.String" MaxLength="20"/>
+                <Property Name="valueBy" Type="Edm.String" MaxLength="20"/>
+                <Property Name="valueOn" Type="Edm.String" MaxLength="20"/>
+            </ComplexType>
+            <ComplexType Name="SAP__FitToPage">
+                <Property Name="ErrorRecoveryBehavior" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Error behavior" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="IsEnabled" Type="Edm.Boolean" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MinimumFontSize" Type="Edm.Int32" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
+            <Association Name="assoc_F902A971813A1512F599231C4FD1029A" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attachmentsType" Multiplicity="1" Role="FromRole_assoc_F902A971813A1512F599231C4FD1029A"/>
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attach_statusType" Multiplicity="*" Role="ToRole_assoc_F902A971813A1512F599231C4FD1029A"/>
+            </Association>
+            <Association Name="assoc_0A93E67D957118EB6A15EE1686278CED" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attachmentsType" Multiplicity="1" Role="FromRole_assoc_0A93E67D957118EB6A15EE1686278CED"/>
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" Multiplicity="1" Role="ToRole_assoc_0A93E67D957118EB6A15EE1686278CED"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_0A93E67D957118EB6A15EE1686278CED">
+                        <PropertyRef Name="reservationNo"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_0A93E67D957118EB6A15EE1686278CED">
+                        <PropertyRef Name="reservationNo"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="to_format" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" Multiplicity="1" Role="FromRole_to_format"/>
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__Format" Multiplicity="1" Role="ToRole_to_format"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_to_format">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_to_format">
+                        <PropertyRef Name="Id"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="to_tablecolumns" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" Multiplicity="1" Role="FromRole_to_tablecolumns"/>
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__TableColumns" Multiplicity="*" Role="ToRole_to_tablecolumns"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_to_tablecolumns">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_to_tablecolumns">
+                        <PropertyRef Name="Id"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="to_coverpage" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" Multiplicity="1" Role="FromRole_to_coverpage"/>
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__CoverPage" Multiplicity="*" Role="ToRole_to_coverpage"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_to_coverpage">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_to_coverpage">
+                        <PropertyRef Name="Id"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="to_signature" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" Multiplicity="1" Role="FromRole_to_signature"/>
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__Signature" Multiplicity="1" Role="ToRole_to_signature"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_to_signature">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_to_signature">
+                        <PropertyRef Name="Id"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="to_pdfstandard" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" Multiplicity="1" Role="FromRole_to_pdfstandard"/>
+                <End Type="cds_zz_sd_gifts_cockpit.SAP__PDFStandard" Multiplicity="1" Role="ToRole_to_pdfstandard"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_to_pdfstandard">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_to_pdfstandard">
+                        <PropertyRef Name="Id"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_5233A03264B3A13F10BC5463C0833787" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attach_statusType" Multiplicity="1" Role="FromRole_assoc_5233A03264B3A13F10BC5463C0833787"/>
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attachmentsType" Multiplicity="1" Role="ToRole_assoc_5233A03264B3A13F10BC5463C0833787"/>
+            </Association>
+            <Association Name="assoc_8E15C2F23D9F28BBDF655D2F242DF4F2" sap:content-version="1">
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" Multiplicity="1" Role="FromRole_assoc_8E15C2F23D9F28BBDF655D2F242DF4F2"/>
+                <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attachmentsType" Multiplicity="*" Role="ToRole_assoc_8E15C2F23D9F28BBDF655D2F242DF4F2"/>
+            </Association>
             <Association Name="assoc_C7DA7E946E227034D95304A8ED5D4E6C" sap:content-version="1">
                 <End Type="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" Multiplicity="1" Role="FromRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C">
                     <OnDelete Action="Cascade"/>
@@ -141,23 +403,114 @@
                 </ReferentialConstraint>
             </Association>
             <EntityContainer Name="cds_zz_sd_gifts_cockpit_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="SAP__Currencies" EntityType="cds_zz_sd_gifts_cockpit.SAP__Currency" sap:content-version="1"/>
+                <EntitySet Name="SAP__UnitsOfMeasure" EntityType="cds_zz_sd_gifts_cockpit.SAP__UnitOfMeasure" sap:content-version="1"/>
+                <EntitySet Name="SAP__MyDocumentDescriptions" EntityType="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" sap:content-version="1"/>
+                <EntitySet Name="SAP__FormatSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__Format" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SAP__PDFStandardSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__PDFStandard" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SAP__TableColumnsSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__TableColumns" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SAP__CoverPageSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__CoverPage" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SAP__SignatureSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__Signature" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SAP__ValueHelpSet" EntityType="cds_zz_sd_gifts_cockpit.SAP__ValueHelp" sap:content-version="1"/>
                 <EntitySet Name="zz_dd_gifts_ckpt_sh_country" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_countryType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_dd_gifts_ckpt_sh_dg" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_dgType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_dd_gifts_ckpt_sh_organizer" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_organizerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="zz_dd_gifts_ckpt_sh_pickdurati" EntityType="cds_zz_sd_gifts_cockpit.zz_dd_gifts_ckpt_sh_pickduratiType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="zz_pv_gifts_ckpt_attachments" EntityType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attachmentsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="zz_pv_gifts_ckpt_attach_status" EntityType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_attach_statusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_pv_gifts_ckpt_items" EntityType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_itemsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_pv_gifts_ckpt_reservations" EntityType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:content-version="1" sap:deletable-path="Delete_mc" sap:updatable-path="Update_mc"/>
+                <EntitySet Name="zz_pv_gifts_ckpt_sh_pickdurati" EntityType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_sh_pickduratiType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="zz_pv_gifts_ckpt_status" EntityType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_statusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <AssociationSet Name="assoc_8E15C2F23D9F28BBDF655D2F242DF4F2" Association="cds_zz_sd_gifts_cockpit.assoc_8E15C2F23D9F28BBDF655D2F242DF4F2" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="zz_pv_gifts_ckpt_reservations" Role="FromRole_assoc_8E15C2F23D9F28BBDF655D2F242DF4F2"/>
+                    <End EntitySet="zz_pv_gifts_ckpt_attachments" Role="ToRole_assoc_8E15C2F23D9F28BBDF655D2F242DF4F2"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_5233A03264B3A13F10BC5463C0833787" Association="cds_zz_sd_gifts_cockpit.assoc_5233A03264B3A13F10BC5463C0833787" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="zz_pv_gifts_ckpt_attach_status" Role="FromRole_assoc_5233A03264B3A13F10BC5463C0833787"/>
+                    <End EntitySet="zz_pv_gifts_ckpt_attachments" Role="ToRole_assoc_5233A03264B3A13F10BC5463C0833787"/>
+                </AssociationSet>
+                <AssociationSet Name="to_formatSet" Association="cds_zz_sd_gifts_cockpit.to_format" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_format"/>
+                    <End EntitySet="SAP__FormatSet" Role="ToRole_to_format"/>
+                </AssociationSet>
+                <AssociationSet Name="to_pdfstandardSet" Association="cds_zz_sd_gifts_cockpit.to_pdfstandard" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_pdfstandard"/>
+                    <End EntitySet="SAP__PDFStandardSet" Role="ToRole_to_pdfstandard"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_F902A971813A1512F599231C4FD1029A" Association="cds_zz_sd_gifts_cockpit.assoc_F902A971813A1512F599231C4FD1029A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="zz_pv_gifts_ckpt_attachments" Role="FromRole_assoc_F902A971813A1512F599231C4FD1029A"/>
+                    <End EntitySet="zz_pv_gifts_ckpt_attach_status" Role="ToRole_assoc_F902A971813A1512F599231C4FD1029A"/>
+                </AssociationSet>
+                <AssociationSet Name="to_tablecolumnsSet" Association="cds_zz_sd_gifts_cockpit.to_tablecolumns" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_tablecolumns"/>
+                    <End EntitySet="SAP__TableColumnsSet" Role="ToRole_to_tablecolumns"/>
+                </AssociationSet>
+                <AssociationSet Name="to_signatureSet" Association="cds_zz_sd_gifts_cockpit.to_signature" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_signature"/>
+                    <End EntitySet="SAP__SignatureSet" Role="ToRole_to_signature"/>
+                </AssociationSet>
                 <AssociationSet Name="assoc_C7DA7E946E227034D95304A8ED5D4E6C" Association="cds_zz_sd_gifts_cockpit.assoc_C7DA7E946E227034D95304A8ED5D4E6C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="zz_pv_gifts_ckpt_reservations" Role="FromRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C"/>
                     <End EntitySet="zz_pv_gifts_ckpt_items" Role="ToRole_assoc_C7DA7E946E227034D95304A8ED5D4E6C"/>
+                </AssociationSet>
+                <AssociationSet Name="to_coverpageSet" Association="cds_zz_sd_gifts_cockpit.to_coverpage" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SAP__MyDocumentDescriptions" Role="FromRole_to_coverpage"/>
+                    <End EntitySet="SAP__CoverPageSet" Role="ToRole_to_coverpage"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_0A93E67D957118EB6A15EE1686278CED" Association="cds_zz_sd_gifts_cockpit.assoc_0A93E67D957118EB6A15EE1686278CED" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="zz_pv_gifts_ckpt_attachments" Role="FromRole_assoc_0A93E67D957118EB6A15EE1686278CED"/>
+                    <End EntitySet="zz_pv_gifts_ckpt_reservations" Role="ToRole_assoc_0A93E67D957118EB6A15EE1686278CED"/>
                 </AssociationSet>
                 <FunctionImport Name="allowReservation" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="allowReservation_ac">
                     <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
                     <Parameter Name="Reason" Type="Edm.String" Mode="In"/>
                 </FunctionImport>
+                <FunctionImport Name="changeComment" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="changeComment_ac">
+                    <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
+                    <Parameter Name="CommentTitle" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="CommentObj" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="deleteFile" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="deleteFile_ac">
+                    <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
+                    <Parameter Name="TypeIdA" Type="Edm.String" Mode="In" MaxLength="32" sap:label="Object Type"/>
+                    <Parameter Name="AttachId" Type="Edm.String" Mode="In" MaxLength="70" sap:label="Instance ID"/>
+                    <Parameter Name="TypeIdB" Type="Edm.String" Mode="In" MaxLength="32" sap:label="Object Type"/>
+                </FunctionImport>
+                <FunctionImport Name="modifyHeader" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="modifyHeader_ac">
+                    <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
+                    <Parameter Name="reservationStatus" Type="Edm.String" Mode="In" MaxLength="1" sap:label="Reservation status"/>
+                    <Parameter Name="dg" Type="Edm.String" Mode="In" MaxLength="60" sap:label="DG"/>
+                    <Parameter Name="eventOrganizer" Type="Edm.String" Mode="In" MaxLength="80" sap:label="Event organiser"/>
+                    <Parameter Name="contactPerson" Type="Edm.String" Mode="In" MaxLength="80" sap:label="Contact Person"/>
+                    <Parameter Name="service" Type="Edm.String" Mode="In" MaxLength="60" sap:label="Service of ct.pers"/>
+                    <Parameter Name="eventName" Type="Edm.String" Mode="In" MaxLength="50" sap:label="Event name"/>
+                    <Parameter Name="eventCountry" Type="Edm.String" Mode="In" MaxLength="3" sap:label="Event Country"/>
+                    <Parameter Name="eventDate" Type="Edm.DateTime" Mode="In" Precision="0" sap:label="Event Date" sap:display-format="Date"/>
+                    <Parameter Name="needByDate" Type="Edm.DateTime" Mode="In" Precision="0" sap:label="Need-by Date" sap:display-format="Date"/>
+                    <Parameter Name="requestor" Type="Edm.String" Mode="In" MaxLength="12" sap:label="User Name"/>
+                    <Parameter Name="pickupComment" Type="Edm.String" Mode="In" MaxLength="120" sap:label="Pickup comment"/>
+                </FunctionImport>
+                <FunctionImport Name="pickup" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="pickup_ac">
+                    <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
+                    <Parameter Name="pickupDate" Type="Edm.DateTime" Mode="In" Precision="0" sap:label="Pickup date" sap:display-format="Date"/>
+                    <Parameter Name="pickupTime" Type="Edm.Time" Mode="In" Precision="0" sap:label="Pickup time"/>
+                    <Parameter Name="pickupDuration" Type="Edm.String" Mode="In" MaxLength="2" sap:label="Pickup duration"/>
+                    <Parameter Name="pickupComment" Type="Edm.String" Mode="In" MaxLength="120" sap:label="Pickup comment"/>
+                </FunctionImport>
                 <FunctionImport Name="rejectReservation" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="rejectReservation_ac">
                     <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
                     <Parameter Name="Reason" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="sendEmail" ReturnType="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" EntitySet="zz_pv_gifts_ckpt_reservations" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="sendEmail_ac">
+                    <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
+                </FunctionImport>
+                <FunctionImport Name="uploadFile" ReturnType="cds_zz_sd_gifts_cockpit.zz_ae_gifts_ckpt_attachments" m:HttpMethod="POST" sap:action-for="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType" sap:applicable-path="uploadFile_ac">
+                    <Parameter Name="reservationNo" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Reservation"/>
+                    <Parameter Name="Filename" Type="Edm.String" Mode="In" MaxLength="50" sap:label="Document title"/>
+                    <Parameter Name="Mediatype" Type="Edm.String" Mode="In" MaxLength="128" sap:label="MIME type"/>
+                    <Parameter Name="Filesize" Type="Edm.Int64" Mode="In"/>
+                    <Parameter Name="Content" Type="Edm.String" Mode="In"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
@@ -239,11 +592,75 @@
                 </Annotation>
                 <Annotation Term="Common.ValueListWithFixedValues"/>
             </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/pickupDuration" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String=""/>
+                        <PropertyValue Property="CollectionPath" String="zz_dd_gifts_ckpt_sh_pickdurati"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="pickupDuration"/>
+                                    <PropertyValue Property="ValueListProperty" String="Duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues"/>
+            </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/to_items" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.Composition"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities/zz_pv_gifts_ckpt_attachments" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>mimeType</PropertyPath>
+                                <PropertyPath>binaryContent</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_reservation"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="true"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_status"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>mimeType</PropertyPath>
+                                <PropertyPath>binaryContent</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities/zz_pv_gifts_ckpt_reservations" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Capabilities.FilterRestrictions">
@@ -251,10 +668,17 @@
                         <PropertyValue Property="NonFilterableProperties">
                             <Collection>
                                 <PropertyPath>allowReservation_ac</PropertyPath>
+                                <PropertyPath>changeComment_ac</PropertyPath>
+                                <PropertyPath>deleteFile_ac</PropertyPath>
+                                <PropertyPath>modifyHeader_ac</PropertyPath>
+                                <PropertyPath>pickup_ac</PropertyPath>
                                 <PropertyPath>rejectReservation_ac</PropertyPath>
+                                <PropertyPath>sendEmail_ac</PropertyPath>
+                                <PropertyPath>uploadFile_ac</PropertyPath>
                                 <PropertyPath>Delete_mc</PropertyPath>
                                 <PropertyPath>Update_mc</PropertyPath>
                                 <PropertyPath>commentObj</PropertyPath>
+                                <PropertyPath>commentTitle</PropertyPath>
                             </Collection>
                         </PropertyValue>
                         <PropertyValue Property="FilterExpressionRestrictions">
@@ -271,6 +695,14 @@
                     <Record>
                         <PropertyValue Property="RestrictedProperties">
                             <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_attach"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
                                 <Record>
                                     <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_items"/>
                                     <PropertyValue Property="InsertRestrictions">
@@ -291,10 +723,35 @@
                         <PropertyValue Property="NonSortableProperties">
                             <Collection>
                                 <PropertyPath>allowReservation_ac</PropertyPath>
+                                <PropertyPath>changeComment_ac</PropertyPath>
+                                <PropertyPath>deleteFile_ac</PropertyPath>
+                                <PropertyPath>modifyHeader_ac</PropertyPath>
+                                <PropertyPath>pickup_ac</PropertyPath>
                                 <PropertyPath>rejectReservation_ac</PropertyPath>
+                                <PropertyPath>sendEmail_ac</PropertyPath>
+                                <PropertyPath>uploadFile_ac</PropertyPath>
                                 <PropertyPath>Delete_mc</PropertyPath>
                                 <PropertyPath>Update_mc</PropertyPath>
                                 <PropertyPath>commentObj</PropertyPath>
+                                <PropertyPath>commentTitle</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities/zz_pv_gifts_ckpt_attach_status" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_header"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
@@ -317,6 +774,129 @@
                         </PropertyValue>
                     </Record>
                 </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.cds_zz_sd_gifts_cockpit_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Org.OData.Capabilities.V1.BatchSupport">
+                    <Record Type="Org.OData.Capabilities.V1.BatchSupportType">
+                        <PropertyValue Property="ReferencesAcrossChangeSetsSupported" Bool="true"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__CodeList.CurrencyCodes">
+                    <Record>
+                        <PropertyValue Property="Url" String="./$metadata"/>
+                        <PropertyValue Property="CollectionPath" String="SAP__Currencies"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__CodeList.UnitsOfMeasure">
+                    <Record>
+                        <PropertyValue Property="Url" String="./$metadata"/>
+                        <PropertyValue Property="CollectionPath" String="SAP__UnitsOfMeasure"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__PDF.Features">
+                    <Record>
+                        <PropertyValue Property="DocumentDescriptionReference" String="./$metadata"/>
+                        <PropertyValue Property="DocumentDescriptionCollection" String="SAP__MyDocumentDescriptions"/>
+                        <PropertyValue Property="ArchiveFormat" Bool="true"/>
+                        <PropertyValue Property="ResultSizeDefault" Int="20000"/>
+                        <PropertyValue Property="ResultSizeMaximum" Int="20000"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__CodeList.SAP__DocumentDescription">
+                    <Record>
+                        <PropertyValue Property="Url" String="./$metadata"/>
+                        <PropertyValue Property="CollectionPath" String="SAP__MyDocumentDescriptions"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__Currency/CurrencyCode" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__common.Text" Path="Text"/>
+                <Annotation Term="SAP__common.UnitSpecificScale" Path="DecimalPlaces"/>
+                <Annotation Term="SAP__CodeList.StandardCode" Path="ISOCode"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__UnitOfMeasure/UnitCode" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__common.Text" Path="Text"/>
+                <Annotation Term="SAP__common.UnitSpecificScale" Path="DecimalPlaces"/>
+                <Annotation Term="SAP__CodeList.StandardCode" Path="ISOCode"/>
+                <Annotation Term="SAP__CodeList.ExternalCode" Path="ExternalCode"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__UnitOfMeasure" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__core.AlternateKeys">
+                    <Collection>
+                        <Record>
+                            <PropertyValue Property="Key">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="Name" Path="ExternalCode"/>
+                                        <PropertyValue Property="Alias" String="ExternalCode"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription/CreatedBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__core.Computed"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription/CreatedAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__core.Computed"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__DocumentDescription" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__capabilties.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilties.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilties.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilties.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="Format/Orientation"/>
+                                    <PropertyValue Property="AllowedExpressions" String="Multivalue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="Format/PaperSize"/>
+                                    <PropertyValue Property="AllowedExpressions" String="Multivalue"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__Format/Orientation" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Record>
+                        <PropertyValue Property="Url" String="./$metadata"/>
+                        <PropertyValue Property="CollectionPath" String="SAP__ValueHelpSet?$filter=VALUEHELP%20eq%20%27FontName%27"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__common.ValueListWithFixedValues"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.SAP__TableColumns/HorizontalAlignment" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Record>
+                        <PropertyValue Property="Url" String="./$metadata"/>
+                        <PropertyValue Property="CollectionPath" String="SAP__ValueHelpSet?$filter=VALUEHELP%20eq%20%27HorizontalAlignment%27"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__common.ValueListWithFixedValues"/>
             </Annotations>
             <atom:link rel="self" href="https://sapfidf102.ep.parl.union.eu:8001/sap/opu/odata/sap/ZZ_SB_GIFTS_COCKPIT_V2/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
             <atom:link rel="latest-version" href="https://sapfidf102.ep.parl.union.eu:8001/sap/opu/odata/sap/ZZ_SB_GIFTS_COCKPIT_V2/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>

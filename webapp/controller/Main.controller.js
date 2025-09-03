@@ -1323,7 +1323,88 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             } else {
                 fnAfterSaveCommentDialog();
             }
-        }        
+        },
+
+//===== SEND MAIL =================================//
+
+        onSendMailDialog: function(oEvent){
+
+            const oSmartTable = this.getView()?.byId("idSmartTable");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+
+            if (oSelected.length === 1) {
+
+                MessageBox.confirm(
+                    oResourceBundle.getText("Main.QuestionSendMail"), 
+                    {
+                        title: oResourceBundle.getText("Main.ConfirmationTitle"), 
+                        actions: [
+                            oResourceBundle.getText("Main.Yes"),
+                            oResourceBundle.getText("Main.No")                          ],
+                        emphasizedAction: oResourceBundle.getText("Main.No"),
+                        onClose: function (sAction) {
+                            if (sAction === oResourceBundle.getText("Main.Yes")) {
+                                this._submitSendMailDialog(oSelected);
+                            }
+                        }.bind(this)
+                    }
+                );
+
+            } else {
+                const sMessage = oResourceBundle.getText("Main.ErrorMsgSelectLineMail");
+                MessageToast.show(sMessage);
+            }
+
+        },
+
+        _submitSendMailDialog: function(oSelected){
+
+            const oModel = this.getView()?.getModel(); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const sReservationNo = oSelected[0]?.getBindingContext()?.getObject()?.reservationNo;
+
+            oModel.callFunction("/sendEmail", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: sReservationNo
+                },
+                success: function(oData, oResponse) {
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oResourceBundle.getText("Main.CommentErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                    }
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+
+                    const oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Main.CommentErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oBundle.getText("Main.CommentErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                    }
+                    
+                }.bind(this)
+            });            
+
+        }
 
     });
 });

@@ -144,10 +144,37 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/reservationCrit">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/reservationIcon">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/commentTitle">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/allowReservation_ac">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/changeComment_ac">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/deleteFile_ac">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/modifyHeader_ac">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/pickup_ac">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/rejectReservation_ac">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/sendEmail_ac">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/uploadFile_ac">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/Delete_mc">
@@ -155,6 +182,9 @@
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/Update_mc">
                 <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/commentObj">
+                <Annotation Term="UI.MultiLineText"/>
             </Annotations>
             <Annotations Target="cds_zz_sd_gifts_cockpit.zz_pv_gifts_ckpt_reservationsType/eventCountry">
                 <Annotation Term="Common.Text" Path="eventCountryTxt">
@@ -214,10 +244,6 @@
                             <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="commentObj"/>
-                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
-                        </Record>
-                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="protocolResponsible"/>
                             <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
                         </Record>
@@ -240,10 +266,6 @@
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="pickupComment"/>
                             <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reservationIcon"/>
-                            <Annotation Term="UI.Hidden"/>
                         </Record>
                     </Collection>
                 </Annotation>
