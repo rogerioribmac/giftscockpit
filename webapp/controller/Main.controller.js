@@ -214,6 +214,13 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 this.byId("idMainPickBtn")?.setEnabled(false);
             }
 
+            // Mission Cancelled Button
+            if (sKey !== '7'){
+                this.byId("idMainMissionBtn")?.setEnabled(true);
+            } else {
+                this.byId("idMainMissionBtn")?.setEnabled(false);
+            }
+
         },
 
         _setInitialFilter: function(){
@@ -1355,7 +1362,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                 const sMessage = oResourceBundle.getText("Main.ErrorMsgSelectLineMail");
                 MessageToast.show(sMessage);
             }
-
+y
         },
 
         _submitSendMailDialog: function(oSelected){
@@ -1403,6 +1410,153 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                     
                 }.bind(this)
             });            
+
+        },
+
+//===== MISSION CANCELLED =================================//
+
+        onMissionCancelledDialog: function(oEvent){
+
+            const oSmartTable = this.getView()?.byId("idSmartTable");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+
+            if (oSelected.length) {
+
+                this._openDialogMissionCanc(oSelected);
+
+            } else {
+                const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineMissionCanc");
+                MessageToast.show(sMessage);
+            }
+
+        },
+
+        onSaveMissionCancDialog: function(oEvent){
+
+            const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            const oDatePicker = this.byId("idMissionCancDateInput");
+            const sDate = oDatePicker.getValue();
+
+            if (sDate){
+
+                this._submitMissionCancDialog();
+
+            } else {
+                oDatePicker.setValueState("Error");
+                oDatePicker.setValueStateText(oResourceBundle.getText("Main.DateRequired"));
+            }
+
+        },
+
+        onMissionCancDateChange: function(oEvent){
+
+            const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            const oDatePicker = this.byId("idMissionCancDateInput");
+            const sDate = oDatePicker.getValue();
+
+            if (sDate){
+                oDatePicker.setValueState("None");
+                oDatePicker.setValueStateText("");
+            } 
+
+        },
+
+        onCancelMissionCancDialog: function(oEvent){
+
+            this._pMissionCancDialog.then(function (oDialog) {
+                oDialog.close();
+            });
+
+        },
+
+        _submitMissionCancDialog: function(){
+
+            const oModel = this.getView()?.getModel();
+            const oDialog = this.byId("idMissionCancDialog");
+            const oContext = oDialog.getBindingContext();
+            const sReservationNo = oContext.getProperty("reservationNo"); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const sComment = this.byId("idMissionCancCommentsInput").getValue();
+            const sDate = new Date(this.byId("idMissionCancDateInput").getValue());
+
+
+            oModel.callFunction("/missionCancelled", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: sReservationNo,
+                    Comment: sComment,
+                    Date: sDate
+                },
+                success: function(oData, oResponse) {
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oResourceBundle.getText("Main.CommentErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                    }
+                    this._recalculateIconTabBarCount();
+                    this._pMissionCancDialog.then(function (oDialog) {
+                        oDialog.close();
+                    });
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+
+                    const oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Main.CommentErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oBundle.getText("Main.CommentErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                    }
+                    
+                }.bind(this)
+            });
+
+        },
+
+        _openDialogMissionCanc: function(oSelected){
+
+            this._aSelectedItems = oSelected; 
+            this._iCurrentIndex = 0;
+            const oView = this.getView();
+            const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
+            const oModel = oContext.getModel();
+
+            if (!this._pMissionCancDialog) {
+
+                this._pMissionCancDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "com.ep.zgiftscockpit.view.fragments.MainMissionCancDialog",
+                    controller: this
+                }).then((oDialog) => {
+                    oView.addDependent(oDialog);
+                    this._setEscapeHandler(oDialog);
+                    return oDialog;
+                });
+
+            }
+
+            this._pMissionCancDialog.then((oDialog) => {
+                oDialog.setBindingContext(oContext);
+                this.byId("idMissionCancCommentsInput").setValue();
+                this.byId("idMissionCancDateInput").setValue();
+                oDialog.open();
+            });
 
         }
 

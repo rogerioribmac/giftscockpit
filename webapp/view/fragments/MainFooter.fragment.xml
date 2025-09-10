@@ -10,6 +10,7 @@
         <Button text="{i18n>Main.Pickup}" press="onPickupDialog" icon="sap-icon://enter-more" id="idMainPickBtn" />
         <Button text="{i18n>Main.ChangeComment}" press="onChangeCommentDialog" icon="sap-icon://comment" id="idMainCommentBtn" />
         <Button text="{i18n>Main.SendMail}" press="onSendMailDialog" icon="sap-icon://email" id="idMainMailBtn" />
+        <Button text="{i18n>Main.MissionCancelled}" press="onMissionCancelledDialog" icon="sap-icon://decline" id="idMainMissionBtn" />
     </Toolbar>
 
 </core:FragmentDefinition>

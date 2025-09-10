@@ -1,0 +1,52 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:layout="sap.ui.layout">
+    
+    <Dialog
+        id="idMissionCancDialog"
+        title="{i18n>Main.MissionCancelled}"
+        contentWidth="40rem"
+        draggable="true"
+        resizable="true"
+        class="sapUiContentPadding" >
+           
+        <f:SimpleForm
+            title="{parts: [
+                {path: 'i18n>Main.Reservation'},
+                {path: 'reservationNo'}
+            ],
+            formatter: '.formatDialogModifyHeaderTitle'}"
+            editable="true"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="true"
+            columnsXL="1"
+			columnsL="1"
+			columnsM="1">
+            <f:content>
+            <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+                <Text text="{i18n>Main.MissionCancText1}" />
+                <Text text="{i18n>Main.MissionCancText2}" />
+            </VBox>
+                <Label text="{i18n>Main.Comments}" labelFor="idMissionCancCommentsInput"/>
+                <Input width="100%" id="idMissionCancCommentsInput"/>
+                <Label text="{i18n>Main.MissionCancDate}" labelFor="idMissionCancDateInput"/>
+                <DatePicker
+					id="idMissionCancDateInput"
+					placeholder="{i18n>Main.EnterMissionCancDate}"
+					class="sapUiSmallMarginBottom" 
+                    change="onMissionCancDateChange"
+                    required="true" />
+            </f:content>
+        </f:SimpleForm>
+
+        <buttons>
+            <Button text="Save" type="Emphasized" press="onSaveMissionCancDialog"/>
+            <Button text="Cancel" press="onCancelMissionCancDialog"/>
+        </buttons>
+
+    </Dialog>
+
+</core:FragmentDefinition>

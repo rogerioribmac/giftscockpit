@@ -26,9 +26,9 @@
 			columnsL="1"
 			columnsM="1">
             <f:content>
-                <Label text="{i18n>Main.Title}" />
+                <Label text="{i18n>Main.Title}" labelFor="idCommentTitleInput" />
                 <Input value="{commentTitle}" width="100%" id="idCommentTitleInput"/>
-                <Label text="{i18n>Main.Comment}" />
+                <Label text="{i18n>Main.Comment}" labelFor="idCommentObjTextArea"/>
                 <TextArea value="{commentObj}" rows="12" growing="false" width="100%" id="idCommentObjTextArea" />
             </f:content>
         </f:SimpleForm>
