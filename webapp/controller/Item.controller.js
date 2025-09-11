@@ -13,6 +13,9 @@ function (Controller,MessageToast,MessageBox) {
           const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
           oRouter.getRoute("RouteItem").attachPatternMatched(this._onRouteMatched, this);
 
+          const oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+          this.byId("idItemsDocumentFlow").setNoData(oBundle.getText("Item.NoDocumentFlow"));
+
         },
 
         onAttachmentSelection: function(oEvent){
