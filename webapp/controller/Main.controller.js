@@ -1478,8 +1478,7 @@ y
             const sReservationNo = oContext.getProperty("reservationNo"); 
             const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
             const sComment = this.byId("idMissionCancCommentsInput").getValue();
-            const sDate = new Date(this.byId("idMissionCancDateInput").getValue());
-
+            const sDate = this.byId("idMissionCancDateInput").getDateValue();
 
             oModel.callFunction("/missionCancelled", {
                 method: "POST",

@@ -68,6 +68,20 @@
                     </uxap:ObjectPageSection>
             </uxap:sections>
 
+            <uxap:sections>
+                    <uxap:ObjectPageSection titleUppercase="false" title="{i18n>Item.DocFlow}">
+                        <uxap:subSections>
+                            <uxap:ObjectPageSubSection titleUppercase="false">
+                                <uxap:blocks>
+                                    
+                                    <core:Fragment fragmentName="com.ep.zgiftscockpit.view.fragments.ItemDocumentFlow" type="XML"/>                   
+
+                                </uxap:blocks>
+                            </uxap:ObjectPageSubSection>
+                        </uxap:subSections>
+                    </uxap:ObjectPageSection>
+            </uxap:sections>
+
         </uxap:ObjectPageLayout>
 
         <footer>
