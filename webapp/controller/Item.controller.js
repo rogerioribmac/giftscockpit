@@ -7,7 +7,9 @@ function (Controller,MessageToast,MessageBox) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Item", {
-        
+
+//===== GENERAL METHODS =================================//
+
         onInit: function () {
 
           const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
@@ -17,31 +19,7 @@ function (Controller,MessageToast,MessageBox) {
           this.byId("idItemsDocumentFlow").setNoData(oBundle.getText("Item.NoDocumentFlow"));
 
         },
-
-        onAttachmentSelection: function(oEvent){
-
-          oEvent.preventDefault();
-          const oItem = oEvent?.getParameter("item");
-          const sFileName = oItem?.getFileName();
-          const sMimeType = oItem?.getMediaType();
-          let sBase64 = oItem?.data("fileContent");
-
-          const sUrl = this._generateBlobUrl(sBase64,sMimeType);
-
-          const sMimeLower = sMimeType.toLowerCase();
-          if (sMimeLower.includes("excel") || sMimeLower.includes("word") || sMimeLower.includes("presentation")) {
-              const oLink = document.createElement("a");
-              oLink.href = sUrl;
-              oLink.download = sFileName;
-              document.body.appendChild(oLink);
-              oLink.click();
-              document.body.removeChild(oLink);
-          } else {
-              window.open(sUrl, "_blank");
-          }
-
-        },
-        
+       
         _onRouteMatched: function (oEvent) {
 
             const sReservationNo = oEvent.getParameter("arguments").reservationNo;
@@ -73,6 +51,80 @@ function (Controller,MessageToast,MessageBox) {
                   }.bind(this)
                 }
               });
+        },
+
+//===== STOCK OVERVIEW =================================//        
+        onStockOverview: function(oEvent){
+
+          // const oContext = oEvent.getSource().getBindingContext();
+          // const oData = oContext.getObject();
+
+          const oSmartTable = this.getView()?.byId("idSmartTableItems");
+          const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+          const oBundle = this.getView().getModel("i18n").getResourceBundle();
+          
+          if (oSelected.length == 0){
+              const sMessage = oBundle.getText("Item.ErrorMsgSelectLineStockOverview");
+              MessageToast.show(sMessage);
+          } else if (oSelected.length > 1){
+              const sMessage = oBundle.getText("Item.ErrorMsgSelectLineStockOverview");
+              MessageToast.show(sMessage);
+          } else {
+
+              this._openStockOverview(oSelected);
+
+          }  
+
+        },
+
+        _openStockOverview: function(oSelected){
+
+          const oContext = oSelected[0].getBindingContext();
+          const sMaterial = oContext.getProperty("materialNo");
+          const oRouter = sap.ushell.Container.getService("CrossApplicationNavigation");
+
+          const oNavigationTarget = {
+              target: {
+                  semanticObject: "ZPRESTO",
+                  action: "zistockGifts"
+              },
+              params: {
+                  "materialNo": sMaterial,
+                  "sap-external-app": true
+              }
+          };
+
+          const sHash = oRouter.hrefForExternal(oNavigationTarget);
+          const sLaunchpadUrl = window.location.href.split("#")[0];
+          const sFullUrl = sLaunchpadUrl + sHash;
+          window.open(sFullUrl, "_blank");
+
+        },
+
+//===== ATTACHMENTS =================================//
+
+        onAttachmentSelection: function(oEvent){
+
+          oEvent.preventDefault();
+          const oItem = oEvent?.getParameter("item");
+          const sFileName = oItem?.getFileName();
+          const sMimeType = oItem?.getMediaType();
+          let sBase64 = oItem?.data("fileContent");
+
+          const sUrl = this._generateBlobUrl(sBase64,sMimeType);
+
+          const sMimeLower = sMimeType.toLowerCase();
+          if (sMimeLower.includes("excel") || sMimeLower.includes("word") || sMimeLower.includes("presentation")) {
+              const oLink = document.createElement("a");
+              oLink.href = sUrl;
+              oLink.download = sFileName;
+              document.body.appendChild(oLink);
+              oLink.click();
+              document.body.removeChild(oLink);
+          } else {
+              window.open(sUrl, "_blank");
+          }
+
         },
 
         onAfterItemAdded: function(oEvent){
