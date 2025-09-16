@@ -349,6 +349,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                             MessageBox.success(sSuccessMessage);
                         }
                         this._recalculateIconTabBarCount();
+                        this.onMainClearSelection();
                         this._pAcceptDialog.then(oDialog => oDialog.close());
                     }
 
@@ -470,6 +471,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
                             MessageBox.success(sSuccessMessage);
                         }
                         this._recalculateIconTabBarCount();
+                        this.onMainClearSelection();
                         this._pRejectDialog.then(oDialog => oDialog.close());
                     }
 
@@ -642,6 +644,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             this._checkPendingChangesModifyHeader(() => {
 
+                this.onMainClearSelection();
                 this._pHeaderDialog.then(function (oDialog) {
                     oDialog.close();
                 });
@@ -942,6 +945,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             this._checkPendingChangesPickupDialog(() => {
 
+                this.onMainClearSelection();
                 this._pPickupDialog.then(function (oDialog) {
                     oDialog.close();
                 });
@@ -1210,6 +1214,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
 
             this._checkPendingChangesCommentDialog(() => {
 
+                this.onMainClearSelection();
                 this._pCommentDialog.then(function (oDialog) {
                     oDialog.close();
                 });
@@ -1388,6 +1393,7 @@ y
                             MessageBox.success(sSuccessMessage);
                         }
                     }
+                    this.onMainClearSelection();
 
                 }.bind(this),
                 error: function(oError, oResponse) {
@@ -1503,6 +1509,7 @@ y
                         }
                     }
                     this._recalculateIconTabBarCount();
+                    this.onMainClearSelection();
                     this._pMissionCancDialog.then(function (oDialog) {
                         oDialog.close();
                     });
