@@ -1419,15 +1419,18 @@ y
 
             const oSmartTable = this.getView()?.byId("idSmartTable");
             const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oBundle = this.getView().getModel("i18n").getResourceBundle();
 
-            if (oSelected.length) {
+            if (oSelected.length == 0){
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineMissionCanc");
+                MessageToast.show(sMessage);
+            } else if (oSelected.length > 1){
+                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineMissionCanc");
+                MessageToast.show(sMessage);
+            } else {
 
                 this._openDialogMissionCanc(oSelected);
 
-            } else {
-                const oBundle = this.getView().getModel("i18n").getResourceBundle();
-                const sMessage = oBundle.getText("Main.ErrorMsgSelectLineMissionCanc");
-                MessageToast.show(sMessage);
             }
 
         },
@@ -1488,7 +1491,7 @@ y
                     Date: sDate
                 },
                 success: function(oData, oResponse) {
-
+                    
                     const sSapMessage = oResponse?.headers?.["sap-message"];
                     if (sSapMessage){
                         try {
