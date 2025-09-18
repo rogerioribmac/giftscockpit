@@ -192,9 +192,6 @@ function (Controller,MessageToast,Fragment,MessageBox) {
 //===== MODIFY ITEM =================================//         
         onModifyItem: function(oEvent){
 
-          // const oContext = oEvent.getSource().getBindingContext();
-          // const oData = oContext.getObject();
-
           const oSmartTable = this.getView()?.byId("idSmartTableItems");
           const oSelected = oSmartTable?.getTable()?.getSelectedItems();
           const oBundle = this.getView().getModel("i18n").getResourceBundle();
@@ -315,33 +312,56 @@ function (Controller,MessageToast,Fragment,MessageBox) {
 
         },
 
+        onReservedQuantityChange: function(oEvent){
+
+            const oContext = oEvent.getSource().getBindingContext();
+            const oData = oContext.getObject();
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+
+            const sReserved = oEvent.getParameter("value") || oEvent.getSource().getValue();
+            const sDelivered = oData.deliveredQuantity;
+
+            if (Number(sDelivered) > Number(sReserved)){
+                oEvent.getSource().setValueState("Error");
+                oEvent.getSource().setValueStateText(oResourceBundle.getText("Item.ReservedQuantityError"));
+            } else {
+                oEvent.getSource().setValueState("None");
+            }
+
+        },
+
         _checkPendingChangesModifyItem: function(fnAfterSaveModifyHeader){
 
             const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
             const oModel = this.getView().getModel(); 
+            const oReservedQty = this.byId("idReservedQuantitySmartField");
             const oPendingChanges = oModel?.getPendingChanges();
 
-            if (Object.keys(oPendingChanges).length > 0) {
+            if (oReservedQty.getValueState() !== sap.ui.core.ValueState.Error){
+                if (Object.keys(oPendingChanges).length > 0) {
 
-                MessageBox.confirm(
-                    oResourceBundle.getText("Item.ExitSaveChanges"), 
-                    {
-                        title: oResourceBundle.getText("Item.ConfirmationTitle"), 
-                        actions: [
-                            oResourceBundle.getText("Item.Yes"),
-                            oResourceBundle.getText("Item.No")                          ],
-                        emphasizedAction: oResourceBundle.getText("Item.No"),
-                        onClose: function (sAction) {
-                            if (sAction === oResourceBundle.getText("Item.Yes")) {
-                                this._submitChangesModifyItem();
-                                fnAfterSaveModifyHeader();
-                            }
-                        }.bind(this)
-                    }
-                );
-                
+                    MessageBox.confirm(
+                        oResourceBundle.getText("Item.ExitSaveChanges"), 
+                        {
+                            title: oResourceBundle.getText("Item.ConfirmationTitle"), 
+                            actions: [
+                                oResourceBundle.getText("Item.Yes"),
+                                oResourceBundle.getText("Item.No")                          ],
+                            emphasizedAction: oResourceBundle.getText("Item.No"),
+                            onClose: function (sAction) {
+                                if (sAction === oResourceBundle.getText("Item.Yes")) {
+                                    this._submitChangesModifyItem();
+                                    fnAfterSaveModifyHeader();
+                                }
+                            }.bind(this)
+                        }
+                    );
+                    
+                } else {
+                    fnAfterSaveModifyHeader();
+                }
             } else {
-                fnAfterSaveModifyHeader();
+                MessageBox.error(oReservedQty.getValueStateText());
             }
 
         },  
@@ -404,34 +424,48 @@ function (Controller,MessageToast,Fragment,MessageBox) {
 
         _openModifyDialog: function(oSelected){
 
-          this._aSelectedItems = oSelected; 
-          this._iCurrentIndex = 0;
-          const oView = this.getView();
-          const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
-          const oModel = oContext.getModel();
+            this._aSelectedItems = oSelected; 
+            this._iCurrentIndex = 0;
+            const oView = this.getView();
+            const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
+            const oModel = oContext.getModel();
 
-          if (!this._pModItemDialog) {
+            if (!this._pModItemDialog) {
 
-              this._pModItemDialog = Fragment.load({
-                  id: oView.getId(),
-                  name: "com.ep.zgiftscockpit.view.fragments.ItemModifyItem",
-                  controller: this
-              }).then((oDialog) => {
-                  oView.addDependent(oDialog);
-                  oDialog.setBindingContext(oContext);
-                  this._setEscapeHandler(oDialog);
-                  oDialog.open();
-                  this.OnDialogModItemArrowsVisibility();
-                  return oDialog;
-              });
+                this._pModItemDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "com.ep.zgiftscockpit.view.fragments.ItemModifyItem",
+                    controller: this
+                }).then((oDialog) => {
+                    oView.addDependent(oDialog);
+                    this._setEscapeHandler(oDialog);
+                    this._attachChange();
+                    return oDialog;
+                });
 
-          } else {
-              this._pModItemDialog.then((oDialog) => {
-                  oDialog.setBindingContext(oContext);
-                  this.OnDialogModItemArrowsVisibility();
-                  oDialog.open();
-              });
-          }
+            }
+          
+            this._pModItemDialog.then((oDialog) => {
+                oDialog.setBindingContext(oContext);
+                this.OnDialogModItemArrowsVisibility();
+                this._cleanReservationQtyError();
+                oDialog.open();
+            });
+          
+
+        },
+
+        _cleanReservationQtyError: function(){
+            
+            this.byId("idReservedQuantitySmartField").setValueState("None");
+            this.byId("idReservedQuantitySmartField").setValueStateText();
+
+        },
+
+        _attachChange: function(){
+
+            var oSmartField = this.byId("idReservedQuantitySmartField");
+            oSmartField.attachChange(this.onReservedQuantityChange.bind(this));
 
         },
 

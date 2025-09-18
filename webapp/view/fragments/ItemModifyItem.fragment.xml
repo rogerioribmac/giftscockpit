@@ -37,7 +37,7 @@
                     <smartField:SmartField value="{recipientCountry}" />
                 </smartForm:GroupElement>
                 <smartForm:GroupElement>
-                    <smartField:SmartField value="{reservedQuantity}" />
+                    <smartField:SmartField value="{reservedQuantity}" id="idReservedQuantitySmartField" />
                 </smartForm:GroupElement>
             </smartForm:Group>
         </smartForm:SmartForm>
