@@ -4,7 +4,7 @@
     
     <Toolbar>
         <ToolbarSpacer/>
-        <Button text="{i18n>Item.ModItem}" press="onApprove" icon="sap-icon://edit"/>
+        <Button text="{i18n>Item.ModItem}" press="onModifyItem" icon="sap-icon://edit"/>
         <Button text="{i18n>Item.StockOverview}" press="onStockOverview" icon="sap-icon://product"/>
         <Button text="{i18n>Item.Delete}" press="onModifyHeader" icon="sap-icon://delete"/>
         <Button text="{i18n>Item.Add}" press="onPickup" icon="sap-icon://add"/>

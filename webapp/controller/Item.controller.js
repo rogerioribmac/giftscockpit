@@ -1,9 +1,10 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
+    "sap/ui/core/Fragment",
     "sap/m/MessageBox"
 ],
-function (Controller,MessageToast,MessageBox) {
+function (Controller,MessageToast,Fragment,MessageBox) {
     "use strict";
 
     return Controller.extend("com.ep.zgiftscockpit.controller.Item", {
@@ -12,14 +13,89 @@ function (Controller,MessageToast,MessageBox) {
 
         onInit: function () {
 
-          const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-          oRouter.getRoute("RouteItem").attachPatternMatched(this._onRouteMatched, this);
+            const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.getRoute("RouteItem").attachPatternMatched(this._onRouteMatched, this);
 
-          const oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-          this.byId("idItemsDocumentFlow").setNoData(oBundle.getText("Item.NoDocumentFlow"));
+            const oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            this.byId("idItemsDocumentFlow").setNoData(oBundle.getText("Item.NoDocumentFlow"));
+
+            this._setInitialSortOrder();
 
         },
-       
+
+        formatDialogModifyItemTitle: function(sText, sItem){
+
+            return sText + " " + sItem;
+
+        },
+
+        onItemClearSelection: function(oEvent){
+            
+            const oSmartTable = this.byId("idSmartTableItems");
+            const oInnerTable = oSmartTable?.getTable();
+
+            if (oInnerTable instanceof sap.m.Table) {
+                const aItems = oInnerTable.getItems();
+                aItems.forEach(function (oItem) {
+                    oItem.setSelected(false); // desseleciona
+                });
+            } else if (oInnerTable instanceof sap.ui.table.Table) {
+                oInnerTable.clearSelection(); // limpa todas as seleções
+            }
+
+        },
+
+        _setEscapeHandler: function(oDialog) {
+
+            const oView = this.getView();
+        
+            oDialog.setEscapeHandler((oPromise) => {
+                this._checkCloseDialog(oPromise);
+            });
+
+        },        
+
+        _checkCloseDialog: function(oPromise, oDialog){
+
+          const oModel = this.getView().getModel();
+          const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+          const oPendingChanges = oModel.getPendingChanges();
+
+          if (Object.keys(oPendingChanges).length > 0) {
+              MessageBox.confirm(
+                  oResourceBundle.getText("Item.ExitWithoutSaving"), 
+                  {
+                      title: oResourceBundle.getText("Item.ConfirmationTitle"), 
+                      actions: [
+                          oResourceBundle.getText("Item.Yes"),
+                          oResourceBundle.getText("Item.No")                          ],
+                      emphasizedAction: oResourceBundle.getText("Item.No"),
+                      onClose: function (sAction) {
+                          if (sAction === oResourceBundle.getText("Item.Yes")) {
+                              oModel.resetChanges();
+                              if (oPromise){
+                                  oPromise.resolve();
+                              } else {
+                                  oDialog.then((oDialog) => {
+                                      oDialog.close();
+                                  });
+                              }
+                          }
+                      }.bind(this)
+                  }
+              );
+          } else {
+              if (oPromise){
+                  oPromise.resolve();
+              } else {
+                  oDialog.then((oDialog) => {
+                      oDialog.close();
+                  });
+              }
+          }
+
+        },
+
         _onRouteMatched: function (oEvent) {
 
             const sReservationNo = oEvent.getParameter("arguments").reservationNo;
@@ -53,11 +129,23 @@ function (Controller,MessageToast,MessageBox) {
               });
         },
 
+        _setInitialSortOrder: function(oEvent){
+
+            var oSmartTable = this.getView().byId("idSmartTableItems");            
+            oSmartTable.applyVariant({
+                sort: {
+                    sortItems: 
+                        [{ 
+                            columnKey: "reservationItem", 
+                            operation:"Ascending"}
+                        ]
+                }
+            });
+
+        },
+
 //===== STOCK OVERVIEW =================================//        
         onStockOverview: function(oEvent){
-
-          // const oContext = oEvent.getSource().getBindingContext();
-          // const oData = oContext.getObject();
 
           const oSmartTable = this.getView()?.byId("idSmartTableItems");
           const oSelected = oSmartTable?.getTable()?.getSelectedItems();
@@ -98,6 +186,252 @@ function (Controller,MessageToast,MessageBox) {
           const sLaunchpadUrl = window.location.href.split("#")[0];
           const sFullUrl = sLaunchpadUrl + sHash;
           window.open(sFullUrl, "_blank");
+
+        },
+
+//===== MODIFY ITEM =================================//         
+        onModifyItem: function(oEvent){
+
+          // const oContext = oEvent.getSource().getBindingContext();
+          // const oData = oContext.getObject();
+
+          const oSmartTable = this.getView()?.byId("idSmartTableItems");
+          const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+          const oBundle = this.getView().getModel("i18n").getResourceBundle();
+          
+          if (oSelected.length == 0){
+              const sMessage = oBundle.getText("Item.ErrorMsgSelectLineModify");
+              MessageToast.show(sMessage);
+          } else {
+
+            let bError = false;
+            bError = oSelected.some(oItem => {
+              const oContext = oItem.getBindingContext();
+              const sCategory = oContext.getProperty("matCategory");
+              return sCategory !== "003"; 
+            });
+
+            if (bError){
+              const sMessage = oBundle.getText("Item.ErrorModifyCategory3");
+              MessageToast.show(sMessage);
+            } else {
+              
+              this._openModifyDialog(oSelected);
+
+            }
+
+          }
+
+        },
+
+        OnDialogModItemArrowsVisibility: function(){
+
+            if (this._iCurrentIndex == 0) {
+                this.getView()?.byId("idDialogModItemLeft")?.setEnabled(false);
+            } else {
+                this.getView()?.byId("idDialogModItemLeft")?.setEnabled(true);
+            }
+
+            if (this._iCurrentIndex == this._aSelectedItems.length - 1) {
+                this.getView()?.byId("idDialogModItemRight")?.setEnabled(false);
+            } else {
+                this.getView()?.byId("idDialogModItemRight")?.setEnabled(true);
+            }
+
+        },
+
+        onSaveModifyItem: function(oEvent){         
+
+            this._checkPendingChangesModifyItem(() => {
+
+                this.onItemClearSelection();
+                this._pModItemDialog.then(function (oDialog) {
+                    oDialog.close();
+                });
+                
+            });
+
+        },
+
+        OnDialogModItemMoveLeft: function(oEvent){
+
+            this._checkPendingChangesModifyItem(() => {
+
+                if (this._iCurrentIndex > 0) {
+
+                    this._iCurrentIndex--;
+                    const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                    this._pModItemDialog.then(oDialog => {
+                        oDialog.setBindingContext(oContext);
+                    });
+            
+                    this.getView()?.byId("idDialogModItemRight")?.setEnabled(true);
+    
+                }
+            
+                this.OnDialogModItemArrowsVisibility();
+
+            });
+
+        },
+
+        OnDialogModItemMoveRight: function(oEvent){
+
+            this._checkPendingChangesModifyItem(() => {
+
+                if (this._iCurrentIndex < this._aSelectedItems.length - 1) {
+
+                    this._iCurrentIndex++;
+                    const oContext = this._aSelectedItems[this._iCurrentIndex].getBindingContext();
+                    this._pModItemDialog.then(oDialog => {
+                        oDialog.setBindingContext(oContext);
+                    });
+    
+                    this.getView()?.byId("idDialogModItemLeft")?.setEnabled(true);
+                } 
+                
+                this.OnDialogModItemArrowsVisibility();
+                
+            });
+
+        },
+
+        onSaveModifyItem: function(oEvent){         
+
+            this._checkPendingChangesModifyItem(() => {
+
+                this.onItemClearSelection();
+                this._pModItemDialog.then(function (oDialog) {
+                    oDialog.close();
+                });
+                
+            });
+
+        },
+
+        onCancelModifyItem: function(oEvent){
+
+            this._checkCloseDialog(null, this._pModItemDialog);
+
+        },
+
+        _checkPendingChangesModifyItem: function(fnAfterSaveModifyHeader){
+
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const oModel = this.getView().getModel(); 
+            const oPendingChanges = oModel?.getPendingChanges();
+
+            if (Object.keys(oPendingChanges).length > 0) {
+
+                MessageBox.confirm(
+                    oResourceBundle.getText("Item.ExitSaveChanges"), 
+                    {
+                        title: oResourceBundle.getText("Item.ConfirmationTitle"), 
+                        actions: [
+                            oResourceBundle.getText("Item.Yes"),
+                            oResourceBundle.getText("Item.No")                          ],
+                        emphasizedAction: oResourceBundle.getText("Item.No"),
+                        onClose: function (sAction) {
+                            if (sAction === oResourceBundle.getText("Item.Yes")) {
+                                this._submitChangesModifyItem();
+                                fnAfterSaveModifyHeader();
+                            }
+                        }.bind(this)
+                    }
+                );
+                
+            } else {
+                fnAfterSaveModifyHeader();
+            }
+
+        },  
+
+        _submitChangesModifyItem: function(){
+
+            const oModel = this.getView()?.getModel(); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const oDialog = this.byId("idModifyItemFragment");
+            const oContext = oDialog.getBindingContext();
+            const oData = oContext?.getObject();
+
+            oModel.callFunction("/modifyItem", {
+                method: "POST",
+                urlParameters: {
+                  reservationNo: oData.reservationNo,
+                  reservationItem: oData.reservationItem,
+                  function: oData.function,
+                  FirstName: oData.firstName,
+                  LastName: oData.lastName,
+                  RecipientCountry: oData.recipientCountry,
+                  ReservedQuantity: oData.reservedQuantity
+                },
+                success: function(oData, oResponse) {
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oResourceBundle.getText("Item.callActionErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                    }
+
+                }.bind(this),
+                error: function(oError, oResponse) {
+
+                    const oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oBundle.getText("Item.callActionErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oBundle.getText("Item.callActionErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                    }
+                    
+                }.bind(this)
+            });
+
+        },
+
+        _openModifyDialog: function(oSelected){
+
+          this._aSelectedItems = oSelected; 
+          this._iCurrentIndex = 0;
+          const oView = this.getView();
+          const oContext = oSelected[this._iCurrentIndex].getBindingContext();     
+          const oModel = oContext.getModel();
+
+          if (!this._pModItemDialog) {
+
+              this._pModItemDialog = Fragment.load({
+                  id: oView.getId(),
+                  name: "com.ep.zgiftscockpit.view.fragments.ItemModifyItem",
+                  controller: this
+              }).then((oDialog) => {
+                  oView.addDependent(oDialog);
+                  oDialog.setBindingContext(oContext);
+                  this._setEscapeHandler(oDialog);
+                  oDialog.open();
+                  this.OnDialogModItemArrowsVisibility();
+                  return oDialog;
+              });
+
+          } else {
+              this._pModItemDialog.then((oDialog) => {
+                  oDialog.setBindingContext(oContext);
+                  this.OnDialogModItemArrowsVisibility();
+                  oDialog.open();
+              });
+          }
 
         },
 
