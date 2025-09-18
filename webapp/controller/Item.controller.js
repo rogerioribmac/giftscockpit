@@ -16,8 +16,8 @@ function (Controller,MessageToast,Fragment,MessageBox) {
             const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.getRoute("RouteItem").attachPatternMatched(this._onRouteMatched, this);
 
-            const oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            this.byId("idItemsDocumentFlow").setNoData(oBundle.getText("Item.NoDocumentFlow"));
+            const oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            this.byId("idItemsDocumentFlow").setNoData(oResourceBundle.getText("Item.NoDocumentFlow"));
 
             this._setInitialSortOrder();
 
@@ -149,13 +149,13 @@ function (Controller,MessageToast,Fragment,MessageBox) {
 
           const oSmartTable = this.getView()?.byId("idSmartTableItems");
           const oSelected = oSmartTable?.getTable()?.getSelectedItems();
-          const oBundle = this.getView().getModel("i18n").getResourceBundle();
+          const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
           
           if (oSelected.length == 0){
-              const sMessage = oBundle.getText("Item.ErrorMsgSelectLineStockOverview");
+              const sMessage = oResourceBundle.getText("Item.ErrorMsgSelectLineStockOverview");
               MessageToast.show(sMessage);
           } else if (oSelected.length > 1){
-              const sMessage = oBundle.getText("Item.ErrorMsgSelectLineStockOverview");
+              const sMessage = oResourceBundle.getText("Item.ErrorMsgSelectLineStockOverview");
               MessageToast.show(sMessage);
           } else {
 
@@ -194,10 +194,10 @@ function (Controller,MessageToast,Fragment,MessageBox) {
 
           const oSmartTable = this.getView()?.byId("idSmartTableItems");
           const oSelected = oSmartTable?.getTable()?.getSelectedItems();
-          const oBundle = this.getView().getModel("i18n").getResourceBundle();
+          const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
           
           if (oSelected.length == 0){
-              const sMessage = oBundle.getText("Item.ErrorMsgSelectLineModify");
+              const sMessage = oResourceBundle.getText("Item.ErrorMsgSelectLineModify");
               MessageToast.show(sMessage);
           } else {
 
@@ -209,7 +209,7 @@ function (Controller,MessageToast,Fragment,MessageBox) {
             });
 
             if (bError){
-              const sMessage = oBundle.getText("Item.ErrorModifyCategory3");
+              const sMessage = oResourceBundle.getText("Item.ErrorModifyCategory3");
               MessageToast.show(sMessage);
             } else {
               
@@ -408,11 +408,11 @@ function (Controller,MessageToast,Fragment,MessageBox) {
                         if (sMessage) {
                             MessageBox.error(sMessage);
                         } else {
-                            const sErrorMessage = oBundle.getText("Item.callActionErrorMsg");
+                            const sErrorMessage = oResourceBundle.getText("Item.callActionErrorMsg");
                             MessageBox.error(sErrorMessage);
                         }
                     } catch (e) {
-                        const sErrorMessage = oBundle.getText("Item.callActionErrorMsg");
+                        const sErrorMessage = oResourceBundle.getText("Item.callActionErrorMsg");
                         MessageBox.error(sErrorMessage);
                     } finally {
                     }
@@ -469,6 +469,106 @@ function (Controller,MessageToast,Fragment,MessageBox) {
 
         },
 
+//===== DELETE LINE =================================//
+
+        onDeleteItem: function(oEvent){
+
+            const oSmartTable = this.getView()?.byId("idSmartTableItems");
+            const oSelected = oSmartTable?.getTable()?.getSelectedItems();
+            const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            
+            if (oSelected.length == 0 || oSelected.length > 1){
+                const sMessage = oResourceBundle.getText("Item.ErrorMsgSelectLineDelete");
+                MessageToast.show(sMessage);           
+            } else {
+
+                MessageBox.confirm(
+                    oResourceBundle.getText("Item.ExitDeleteItem"), 
+                    {
+                        title: oResourceBundle.getText("Item.ConfirmationTitle"), 
+                        actions: [
+                            oResourceBundle.getText("Item.Yes"),
+                            oResourceBundle.getText("Item.No")                          ],
+                        emphasizedAction: oResourceBundle.getText("Item.No"),
+                        onClose: function (sAction) {
+                            if (sAction === oResourceBundle.getText("Item.Yes")) {
+                                this._submitDeleteItem(oSelected);
+                                this.onItemClearSelection();
+                            }
+                        }.bind(this)
+                    }
+                );            
+            }
+
+        },
+
+        _submitDeleteItem: function(oSelected){
+
+            const oModel = this.getView()?.getModel(); 
+            const oResourceBundle = this.getView()?.getModel("i18n")?.getResourceBundle();
+            const oContext = oSelected[0].getBindingContext();
+            const oData = oContext?.getObject();
+
+            oModel.callFunction("/deleteItem", {
+                method: "POST",
+                urlParameters: {
+                    reservationNo: oData.reservationNo,
+                    reservationItem: oData.reservationItem
+                },
+                success: (oResult, oResponse) => {
+  
+                    if (this._checkRefreshHeader()){
+                        this.getView().getElementBinding().refresh(true);
+                        const oEventBus = sap.ui.getCore().getEventBus();
+                        oEventBus.publish("Reservations", "UpdateHeaderFromItem");
+                    }
+
+                    const sSapMessage = oResponse?.headers?.["sap-message"];
+                    if (sSapMessage){
+                        try {
+                            const oMessage = JSON.parse(sSapMessage);
+                            MessageBox.success(oMessage.message);
+                        } catch (e) {
+                            const sSuccessMessage = oResourceBundle.getText("Item.callActionErrorMsg");
+                            MessageBox.success(sSuccessMessage);
+                        }
+                    }
+
+                },
+                error: (oError) => {
+
+                    const oResponseJSON = JSON.parse(oError.responseText);
+                    try {
+                        const sMessage = oResponseJSON?.error?.message?.value;
+                    
+                        if (sMessage) {
+                            MessageBox.error(sMessage);
+                        } else {
+                            const sErrorMessage = oResourceBundle.getText("Item.callActionErrorMsg");
+                            MessageBox.error(sErrorMessage);
+                        }
+                    } catch (e) {
+                        const sErrorMessage = oResourceBundle.getText("Item.callActionErrorMsg");
+                        MessageBox.error(sErrorMessage);
+                    } finally {
+                    }
+                    
+                }
+            });
+
+        },
+
+        _checkRefreshHeader: function(){
+
+            const oSmartTable = this.byId("idSmartTableItems");
+            const oTable = oSmartTable.getTable();
+            const oBinding = oTable.getBinding("items");
+
+            const aContexts = oBinding.getCurrentContexts();
+            return aContexts.every(oContext => !!oContext.getProperty("itemDeleted"));
+
+        },
+
 //===== ATTACHMENTS =================================//
 
         onAttachmentSelection: function(oEvent){
@@ -517,7 +617,7 @@ function (Controller,MessageToast,Fragment,MessageBox) {
           oReader.onload = (oEvent) => {
 
             const sBase64Content = oEvent.target.result.split(",")[1];
-            const oBundle = this.getView().getModel("i18n").getResourceBundle();
+            const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
 
             return new Promise((resolve, reject) => {
               oModel.callFunction("/uploadFile", {
@@ -539,7 +639,7 @@ function (Controller,MessageToast,Fragment,MessageBox) {
                           const oMessage = JSON.parse(sSapMessage);
                           MessageToast.show(oMessage.message);
                       } catch (e) {
-                          const sSuccessMessage = oBundle.getText("Item.UploadErrorMsg");
+                          const sSuccessMessage = oResourceBundle.getText("Item.UploadErrorMsg");
                           MessageBox.error(sSuccessMessage);
                       }
                     }
@@ -552,11 +652,11 @@ function (Controller,MessageToast,Fragment,MessageBox) {
                         if (sMessage) {
                             MessageBox.error(sMessage);
                         } else {
-                            const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                            const sErrorMessage = oResourceBundle.getText("Item.UploadErrorMsg");
                             MessageBox.error(sErrorMessage);
                         }
                       } catch (e) {
-                        const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                        const sErrorMessage = oResourceBundle.getText("Item.UploadErrorMsg");
                         MessageBox.error(sErrorMessage);
                       } 
                   }.bind(this)
@@ -595,7 +695,7 @@ function (Controller,MessageToast,Fragment,MessageBox) {
                       const oMessage = JSON.parse(sSapMessage);
                       MessageToast.show(oMessage.message);
                   } catch (e) {
-                      const sSuccessMessage = oBundle.getText("Item.UploadErrorMsg");
+                      const sSuccessMessage = oResourceBundle.getText("Item.UploadErrorMsg");
                       MessageBox.error(sSuccessMessage);
                   }
                   
@@ -610,11 +710,11 @@ function (Controller,MessageToast,Fragment,MessageBox) {
                     if (sMessage) {
                         MessageBox.error(sMessage);
                     } else {
-                        const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                        const sErrorMessage = oResourceBundle.getText("Item.UploadErrorMsg");
                         MessageBox.error(sErrorMessage);
                     }
                   } catch (e) {
-                    const sErrorMessage = oBundle.getText("Item.UploadErrorMsg");
+                    const sErrorMessage = oResourceBundle.getText("Item.UploadErrorMsg");
                     MessageBox.error(sErrorMessage);
                   } 
               }.bind(this)
@@ -624,8 +724,8 @@ function (Controller,MessageToast,Fragment,MessageBox) {
         _generateBlobUrl: function(sBase64,sMimeType){
 
           if (!sBase64) {
-              const oBundle = this.getView().getModel("i18n").getResourceBundle();
-              const sMessage = oBundle.getText("Item.AttachNoContent");
+              const oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+              const sMessage = oResourceBundle.getText("Item.AttachNoContent");
               sap.m.MessageToast.show(sMessage);
               return;
           }

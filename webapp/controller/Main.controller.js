@@ -33,8 +33,18 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             const oSmartFilterBar = this.byId("smartFilterBar");
             oSmartFilterBar.attachSearch(this._recalculateIconTabBarCount, this);
 
+            const oEventBus = sap.ui.getCore().getEventBus();
+            oEventBus.subscribe("Reservations", "UpdateHeaderFromItem", this._eventBusUpdHeaderFromItem, this);
+
             this._setInitialFilter();
 
+        },
+
+        _eventBusUpdHeaderFromItem: function(){
+
+            const sKey = this.byId("iconTabBar").getSelectedKey();
+            this._filterSmartTable(sKey);
+            this._recalculateIconTabBarCount();
         },
 
         onAfterRendering: function(oEvent){
@@ -156,7 +166,7 @@ function (Controller, Fragment, MessageBox, MessageToast, Filter, FilterOperator
             }
 
             const oTable = oSmartTable.getTable();
-            oTable.getBinding("items").filter(aFilters);
+            oTable.getBinding("items")?.filter(aFilters);
 
         },
 
